@@ -6,3 +6,16 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+//Bootswatch theme: Lumen
+@import 'bootswatch';
+
+
+
+.img-h-50{
+    height: 50px;
+}
+
+.a-nd{
+    text-decoration: none;
+}

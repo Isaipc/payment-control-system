@@ -42,7 +42,7 @@
                             <td>{{ $item->tipo }} </td>
                             {{-- <td>{{ $item->direccion}} </td> --}}
                             <td>{{ '$' . $item->costo }} </td>
-                            <td>{{ $item->fecha_compra }} </td>
+                            <td>{{ date('Y-m-d' , strtotime($item->fecha_compra)) }}</td>
                             {{-- <td>{{ $item->created_at }} </td> --}}
                             {{-- <td>{{ $item->updated_at }} </td> --}}
                             <td>

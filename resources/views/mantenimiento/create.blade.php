@@ -17,21 +17,18 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">Concepto</label>
-                        <input type="text" class="form-control text-uppercase" name="concepto"
-                        value="{{ old('name') }}" required autofocus>
+                        <input type="text" class="form-control text-uppercase" name="concepto" required autofocus>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Tipo</label>
-                        <input type="text" class="form-control text-uppercase" name="tipo"
-                        value="{{ old('name') }}" required >
+                        <input type="text" class="form-control text-uppercase" name="tipo" required >
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-3">
                         <label for="">Costo</label>
-                        <input type="number" class="form-control" name="costo" maxlength="12"
-                        value="{{ old('name') }}" required >
+                        <input type="number" class="form-control" name="costo" maxlength="12" required >
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Fecha de compra</label>

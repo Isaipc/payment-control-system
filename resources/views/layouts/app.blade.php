@@ -24,9 +24,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="bg-dark">
+<body class="bg-light">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- <img src="/img/pay-per-click.svg" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt=""> --}}
@@ -89,6 +89,25 @@
 
         <main class="container py-4">
             {{-- <div class="w-75"> --}}
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>{{ session('success')}} </strong>
+                    </div>
+                    <script>jQuery(".alert").alert();</script>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>{{ session('error')}} </strong>
+                    </div>
+                    <script>jQuery(".alert").alert();</script>
+                    @endif
                 @yield('content')
             {{-- </div> --}}
         </main>
