@@ -47,8 +47,13 @@
                             {{-- <td>{{ $item->created_at}} </td> --}}
                             {{-- <td>{{ $item->updated_at}} </td> --}}
                             <td>
-                                <a href="{{ route('empleados.edit', $item->id) }} " class="btn btn-sm btn-primary">Editar</a>
-                                <a href="javascript: document.getElementById('delete-{{ $item->id }}').submit()" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a href="{{ route('empleados.edit', $item->id) }} " class="btn btn-sm btn-primary">
+                                    <img src="img/pencil.svg" class="" alt="" width="32" height="32" title="Editar">
+                                </a>
+
+                                <a href="javascript: document.getElementById('delete-{{ $item->id }}').submit()" class="btn btn-sm btn-danger">
+                                    <img src="img/x.svg" class="" alt="" width="32" height="32" title="Eliminar">
+                                </a>
                                 <form id="delete-{{ $item->id }}" action="{{ route('empleados.destroy', $item->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')

@@ -8,7 +8,7 @@
                 {{-- <span class="badge badge-success">{{ $count_mantenimiento }}</span> --}}
                 <span class="float-right">
                     {{-- <a href="{{ action('EmpleadoController@generarPDF') }}" class="btn btn-md btn-primary">Generar reporte</a> --}}
-                    <a href="{{ route('mantenimiento.create') }}" class="btn btn-md btn-success">Nuevo mantenimiento</a>
+                    <a href="{{ route('mantenimiento.create') }}" class="btn btn-md btn-success">Nuevo material</a>
                 </span>
             </h2>
         </div>
@@ -46,8 +46,12 @@
                             {{-- <td>{{ $item->created_at }} </td> --}}
                             {{-- <td>{{ $item->updated_at }} </td> --}}
                             <td>
-                                <a href="{{ route('mantenimiento.edit', $item->id) }} " class="btn btn-sm btn-primary">Editar</a>
-                                <a href="javascript: document.getElementById('delete-{{ $item->id }}').submit()" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a href="{{ route('mantenimiento.edit', $item->id) }} " class="btn btn-sm btn-primary">
+                                    <img src="img/pencil.svg" class="" alt="" width="32" height="32" title="Editar">
+                                </a>
+                                <a href="javascript: document.getElementById('delete-{{ $item->id }}').submit()" class="btn btn-sm btn-danger">
+                                    <img src="img/x.svg" class="" alt="" width="32" height="32" title="Eliminar">
+                                </a>
                                 <form id="delete-{{ $item->id }}" action="{{ route('mantenimiento.destroy', $item->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')

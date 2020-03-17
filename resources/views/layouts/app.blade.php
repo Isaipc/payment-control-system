@@ -66,6 +66,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <img src="img/person-fill.svg" class="" alt="" width="32" height="32" title="Perfil">
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
