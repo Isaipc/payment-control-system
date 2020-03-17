@@ -18,7 +18,10 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::orderBy('created_at', 'DESC')->get();
+        $clientes = Cliente::where('estatus', 1)
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
+
         $count_clientes = $clientes->count();
         return view('clientes.index', ['clientes' => $clientes, 'count_clientes' => $count_clientes]);
     }
@@ -54,9 +57,11 @@ class ClienteController extends Controller
         $cliente->apellidos = mb_strtoupper($request->apellidos, 'UTF-8');
         $cliente->telefono = $request->telefono;
         $cliente->direccion = mb_strtoupper($request->direccion, 'UTF-8');
-        $cliente->rfc = mb_strtoupper($request->rfc, 'UTF-8');
-        $cliente->horario = $request->horario;
+        $cliente->rfc = $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8');
+        $cliente->hora_entrada = $request->hora_entrada;
+        $cliente->hora_salida = $request->hora_salida;
         $cliente->nacimiento = $request->nacimiento;
+        $cliente->pago = $request->pago;
         $cliente->es_nadador_indie = $request->es_nadador_indie;
 
 
@@ -112,9 +117,11 @@ class ClienteController extends Controller
         $cliente->apellidos = mb_strtoupper($request->apellidos, 'UTF-8');
         $cliente->telefono = $request->telefono;
         $cliente->direccion = mb_strtoupper($request->direccion, 'UTF-8');
-        $cliente->rfc = mb_strtoupper($request->rfc, 'UTF-8');
-        $cliente->horario = $request->horario;
+        $cliente->rfc = $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8');
+        $cliente->hora_entrada = $request->hora_entrada;
+        $cliente->hora_salida = $request->hora_salida;
         $cliente->nacimiento = $request->nacimiento;
+        $cliente->pago = $request->pago;
         $cliente->es_nadador_indie = $request->es_nadador_indie;
 
         if($cliente->save())

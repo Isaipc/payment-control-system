@@ -18,7 +18,9 @@ class EmpleadoController extends Controller
      */
     public function index()
     {
-        $empleados = Empleado::orderBy('created_at', 'DESC')->get();
+        $empleados = Empleado::where('estatus', 1)
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
         $count_empleados = $empleados->count();
         return view('empleados.index', ['empleados' => $empleados, 'count_empleados' => $count_empleados]);
     }
@@ -55,7 +57,9 @@ class EmpleadoController extends Controller
         $empleado->telefono = $request->telefono;
         $empleado->direccion = mb_strtoupper($request->direccion, 'UTF-8');
         $empleado->rfc = $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8');
-        $empleado->horario = $request->horario;
+        $empleado->hora_entrada = $request->hora_entrada;
+        $empleado->hora_salida = $request->hora_salida;
+        $empleado->honorario = $request->honorario;
         $empleado->nacimiento = $request->nacimiento;
 
 
@@ -112,14 +116,16 @@ class EmpleadoController extends Controller
         $empleado->telefono = $request->telefono;
         $empleado->direccion = mb_strtoupper($request->direccion, 'UTF-8');
         $empleado->rfc = $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8');
-        $empleado->horario = $request->horario;
+        $empleado->hora_entrada = $request->hora_entrada;
+        $empleado->hora_salida = $request->hora_salida;
+        $empleado->honorario = $request->honorario;
         $empleado->nacimiento = $request->nacimiento;
 
         if($empleado->save())
             return redirect('/empleados')->with('success', 'Empleado actualizado correctamente');
         else
             return view('empleados.edit', ['empleado' => $empleado]);
-        }
+    }
 
         /**
          * Remove the specified resource from storage.
@@ -129,8 +135,12 @@ class EmpleadoController extends Controller
      */
     public function destroy(Empleado $empleado)
     {
-        $empleado->delete();
-        return redirect('/empleados')->with('success', 'Empleado eliminado correctamente');
+        $empleado->estatus = false;
+
+        if($empleado->save())
+            return redirect('/empleados')->with('success', 'Empleado eliminado correctamente');
+        else
+            return redirect('/empleados')->with('error', 'El empleado no se pudo eliminar correctamente');
     }
 
     // public function generarPDF()

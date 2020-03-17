@@ -18,7 +18,10 @@ class MantenimientoController extends Controller
      */
     public function index()
     {
-        $mantenimiento = Mantenimiento::orderBy('created_at', 'DESC')->get();
+        $mantenimiento = Mantenimiento::where('estatus', 1)
+                        ->orderBy('created_at', 'DESC')
+                        ->get();
+
         $count_mantenimiento = $mantenimiento->count();
         return view('mantenimiento.index', ['mantenimiento' => $mantenimiento, 'count_mantenimiento' => $count_mantenimiento]);
     }
@@ -44,13 +47,13 @@ class MantenimientoController extends Controller
         $request->validate([
             // 'rfc' => 'max:13|unique:mantenimiento',
             // 'rfc' => 'required|max:13|unique:mantenimiento',
-            // 'nombre' => 'required',
+            // 'concepto' => 'required',
             // 'apellidos' => 'required',
             // 'telefono' => 'max:12'
         ]);
 
         $mantenimiento = new Mantenimiento;
-        $mantenimiento->nombre = mb_strtoupper($request->nombre, 'UTF-8');
+        $mantenimiento->concepto = mb_strtoupper($request->concepto, 'UTF-8');
         $mantenimiento->tipo = mb_strtoupper($request->tipo, 'UTF-8');
         $mantenimiento->costo = $request->costo;
         $mantenimiento->fecha_compra = $request->fecha_compra;
@@ -96,12 +99,12 @@ class MantenimientoController extends Controller
         $request->validate([
             // 'rfc' => 'max:13|unique:mantenimiento',
             // 'rfc' => 'required|max:13|unique:mantenimiento',
-            // 'nombre' => 'required',
+            // 'concepto' => 'required',
             // 'apellidos' => 'required',
             // 'telefono' => 'max:12'
         ]);
 
-        $mantenimiento->nombre = mb_strtoupper($request->nombre, 'UTF-8');
+        $mantenimiento->concepto = mb_strtoupper($request->concepto, 'UTF-8');
         $mantenimiento->tipo = mb_strtoupper($request->tipo, 'UTF-8');
         $mantenimiento->costo = $request->costo;
         $mantenimiento->fecha_compra = $request->fecha_compra;
@@ -126,7 +129,7 @@ class MantenimientoController extends Controller
 
     // public function generarPDF()
     // {
-    //     $mantenimiento = Mantenimiento::orderBy('nombre', 'ASC')->get();
+    //     $mantenimiento = Mantenimiento::orderBy('concepto', 'ASC')->get();
     //     $pdf = PDF::loadView('mantenimiento.list', compact('mantenimiento'))
     //     ->setPaper('letter','landscape');
     //     return $pdf->stream();

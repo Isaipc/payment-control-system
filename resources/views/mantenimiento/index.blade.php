@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card w-75">
+    <div class="card">
         <div class="card-header">
             <h2>
                 {{ __('Mantenimiento')}}
@@ -22,8 +22,9 @@
                         <th>Concepto</th>
                         <th>Tipo</th>
                         <th>Costo</th>
-                        <th>Fecha de creación</th>
-                        <th>Ultima actualización</th>
+                        <th>Fecha de compra</th>
+                        {{-- <th>Fecha de creación</th> --}}
+                        {{-- <th>Ultima actualización</th> --}}
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -35,14 +36,15 @@
                                 <form action=""></form>
                             <span id="{{ $item->id }}" data-toggle="modal" data-target="#empleado-data"
                                 class="btn-link text-dark show-empleado">
-                                    {{ $item->nombre }}
+                                    {{ $item->concepto }}
                             </span>
                             </td>
                             <td>{{ $item->tipo }} </td>
                             {{-- <td>{{ $item->direccion}} </td> --}}
-                            <td>{{ $item->costo }} </td>
-                            <td>{{ $item->created_at }} </td>
-                            <td>{{ $item->updated_at }} </td>
+                            <td>{{ '$' . $item->costo }} </td>
+                            <td>{{ $item->fecha_compra }} </td>
+                            {{-- <td>{{ $item->created_at }} </td> --}}
+                            {{-- <td>{{ $item->updated_at }} </td> --}}
                             <td>
                                 <a href="{{ route('mantenimiento.edit', $item->id) }} " class="btn btn-sm btn-primary">Editar</a>
                                 <a href="javascript: document.getElementById('delete-{{ $item->id }}').submit()" class="btn btn-sm btn-danger">Eliminar</a>
@@ -58,7 +60,7 @@
 
         </div>
         <div class="card-footer text-muted">
-            En esta sección puede agregar nuevos mantenimiento.
+            {{-- En esta sección puede agregar nuevos mantenimiento. --}}
         </div>
     </div>
 
@@ -80,24 +82,20 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row mb-2">
-                            <h5 class="mr-2">Nombre:</h5>
+                            <h5 class="mr-2">Concepto:</h5>
                             <h5 id="empleado_nombre"></h5>
                         </div>
                         <div class="row mb-2">
-                            <h5 class="mr-2">RFC:</h5>
-                            <h5 id="empleado_rfc"></h5>
-                        </div>
-                        <div class="row mb-2">
-                            <h5 class="mr-2">Telefono:</h5>
-                            <h5 id="empleado_telefono"></h5>
-                        </div>
-                        <div class="row mb-2">
-                            <h5 class="mr-2">Dirección:</h5>
-                            <h5 id="empleado_direccion"></h5>
-                        </div>
-                        <div class="row mb-2">
-                            <h5 class="mr-2">Categoría:</h5>
+                            <h5 class="mr-2">Tipo:</h5>
                             <h5 id="empleado_categoria"></h5>
+                        </div>
+                        <div class="row mb-2">
+                            <h5 class="mr-2">Costo:</h5>
+                            <h5 id="empleado_categoria"></h5>
+                        </div>
+                        <div class="row mb-2">
+                            <h5 class="mr-2">Fecha de compra:</h5>
+                            <h5 id="empleado_creacion"></h5>
                         </div>
                         <div class="row mb-2">
                             <h5 class="mr-2">Creación:</h5>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card w-75">
+    <div class="card">
         <div class="card-header">
             <h2>
                 {{ __('Empleados')}}
@@ -23,7 +23,7 @@
                         <th>Apellidos</th>
                         <th>Edad</th>
                         <th>Horario</th>
-                        {{-- <th>RFC</th> --}}
+                        <th>Honorario</th>
                         <th>Telefono</th>
                         <th>Acciones</th>
                     </tr>
@@ -41,7 +41,8 @@
                             </td>
                             <td>{{ $item->apellidos }} </td>
                             <td>{{ $item->nacimiento ?: 'No registrado' }} </td>
-                            <td>{{ $item->horario }} </td>
+                            <td>{{ $item->hora_entrada . ' - ' . $item->hora_salida }} </td>
+                            <td>{{ $item->honorario ? '$' . $item->honorario : 'No registrado' }}</td>
                             <td>{{ $item->telefono ?: 'No registrado'}}</td>
                             {{-- <td>{{ $item->created_at}} </td> --}}
                             {{-- <td>{{ $item->updated_at}} </td> --}}

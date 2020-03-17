@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <div class="card w-75">
+    <div class="card">
         <div class="card-header">
             <h2>
                 {{ __('Mantenimiento')}}
@@ -17,13 +17,13 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">Concepto</label>
-                        <input type="text" class="form-control text-uppercase" name="nombre"
-                        value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        <input type="text" class="form-control text-uppercase" name="concepto"
+                        value="{{ old('name') }}" required autofocus>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Tipo</label>
                         <input type="text" class="form-control text-uppercase" name="tipo"
-                        value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        value="{{ old('name') }}" required >
                     </div>
                 </div>
 
@@ -31,12 +31,11 @@
                     <div class="form-group col-md-3">
                         <label for="">Costo</label>
                         <input type="number" class="form-control" name="costo" maxlength="12"
-                        value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        value="{{ old('name') }}" required >
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Fecha de compra</label>
-                        <input  type="date" class="form-control text-uppercase" name="fecha_compra"
-                        value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        <input  type="date" class="form-control text-uppercase" name="fecha_compra" required >
                     </div>
                 </div>
 

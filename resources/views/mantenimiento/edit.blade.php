@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <div class="card w-75">
+    <div class="card">
         <div class="card-header">
             <h2>
                 {{ __('Mantenimiento')}}
@@ -18,8 +18,8 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">Concepto</label>
-                        <input type="text" class="form-control text-uppercase" name="nombre"
-                        value="{{ $mantenimiento->nombre }}" required autocomplete="name" autofocus>
+                        <input type="text" class="form-control text-uppercase" name="concepto"
+                        value="{{ $mantenimiento->concepto }}" required autocomplete="name" autofocus>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Tipo</label>

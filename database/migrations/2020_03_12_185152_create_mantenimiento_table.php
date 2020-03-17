@@ -15,7 +15,7 @@ class CreateMantenimientoTable extends Migration
     {
         Schema::create('mantenimiento', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 120);
+            $table->string('concepto', 120);
             $table->string('tipo', 60);
             $table->double('costo');
             $table->datetime('fecha_compra')->nullable();
