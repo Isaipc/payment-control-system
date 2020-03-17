@@ -87,6 +87,9 @@
             </div>
         </nav>
 
+        <img src="/assets/img/bootstrap.svg" alt="" width="32" height="32" title="Bootstrap">
+
+
         <main class="container py-4">
             {{-- <div class="w-75"> --}}
                 @if (session('success'))

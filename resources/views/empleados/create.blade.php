@@ -6,11 +6,11 @@
     <div class="card">
         <div class="card-header">
             <h2>
-                {{ __('Empleados')}}
+                {{ __('Nuevo empleado')}}
             </h2>
         </div>
         <div class="card-body">
-            <h4 class="card-title">{{ __('Nuevo empleado')}} </h4>
+            <h4 class="card-title">{{ __('Datos personales')}} </h4>
             {{-- <p class="card-text">Text</p> --}}
             <form action="{{ route('empleados.store') }} " method="POST">
                 @csrf

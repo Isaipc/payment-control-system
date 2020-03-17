@@ -13,7 +13,7 @@
             </h2>
         </div>
         <div class="card-body">
-             <h4 class="card-title">Lista de gasto de mantenimiento</h4>
+             <h4 class="card-title">Lista de materiales</h4>
             {{-- <p class="card-text">Text</p> --}}
             <table class="table table-striped table-sm">
                 <thead>

@@ -6,11 +6,11 @@
     <div class="card">
         <div class="card-header">
             <h2>
-                {{ __('Mantenimiento')}}
+                {{ __('Editar material')}}
             </h2>
         </div>
         <div class="card-body">
-            <h4 class="card-title">{{ __('Editar gasto de mantenimiento')}} </h4>
+            <h4 class="card-title">{{ __('')}} </h4>
             {{-- <p class="card-text">Text</p> --}}
             <form action="{{ route('mantenimiento.store', $mantenimiento) }} " method="POST">
                 @csrf

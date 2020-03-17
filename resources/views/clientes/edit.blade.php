@@ -6,11 +6,11 @@
     <div class="card">
         <div class="card-header">
             <h2>
-                {{ __('Clientes')}}
+                {{ __('Editar cliente')}}
             </h2>
         </div>
         <div class="card-body">
-            <h4 class="card-title">{{ __('Editar cliente')}} </h4>
+            <h4 class="card-title">{{ __('Datos personales')}} </h4>
             {{-- <p class="card-text">Text</p> --}}
             <form action="{{ route('clientes.update', $cliente ) }} " method="POST">
                 @csrf
@@ -19,12 +19,12 @@
                     <div class="form-group col-md-6">
                         <label for="">Nombre</label>
                         <input type="text" class="form-control text-uppercase" name="nombre"
-                        value="{{ $cliente->nombre }}" required autocomplete="name" autofocus>
+                        value="{{ $cliente->nombre }}" required autofocus>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Apellidos</label>
                         <input type="text" class="form-control text-uppercase" name="apellidos"
-                        value="{{ $cliente->apellidos }}" required autocomplete="name" autofocus>
+                        value="{{ $cliente->apellidos }}" required>
                     </div>
                 </div>
 
@@ -32,12 +32,12 @@
                     <div class="form-group col-md-3">
                         <label for="">Telefono</label>
                         <input type="tel" class="form-control" name="telefono" maxlength="12"
-                        value="{{ $cliente->telefono }}" required autocomplete="name" autofocus>
+                        value="{{ $cliente->telefono }}" required>
                     </div>
                     <div class="form-group col-md-9">
                         <label for="">Dirección</label>
                         <input  type="text" class="form-control text-uppercase" name="direccion"
-                        value="{{ $cliente->direccion }}" required autocomplete="name" autofocus>
+                        value="{{ $cliente->direccion }}" required>
                     </div>
                 </div>
                 <div class="row">
