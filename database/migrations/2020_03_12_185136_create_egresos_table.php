@@ -15,6 +15,12 @@ class CreateEgresosTable extends Migration
     {
         Schema::create('egresos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tipo_eg_id');
+            $table->unsignedBigInteger('emp_id');
+            $table->unsignedBigInteger('cli_id');
+            $table->foreign('tipo_eg_id')->references('id')->on('tipo_egresos');
+            $table->foreign('emp_id')->references('id')->on('empleados');
+            $table->foreign('cli_id')->references('id')->on('clientes');
             $table->timestamps();
         });
     }

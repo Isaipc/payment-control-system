@@ -15,6 +15,12 @@ class CreateIngresosTable extends Migration
     {
         Schema::create('ingresos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tipo_in_id');
+            $table->unsignedBigInteger('emp_id');
+            $table->unsignedBigInteger('cli_id');
+            $table->foreign('tipo_in_id')->references('id')->on('tipo_ingresos');
+            $table->foreign('emp_id')->references('id')->on('empleados');
+            $table->foreign('cli_id')->references('id')->on('clientes');
             $table->timestamps();
         });
     }
