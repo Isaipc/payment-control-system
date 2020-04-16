@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Cliente;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Display a listing of the resource.
@@ -22,19 +19,7 @@ class ClienteController extends Controller
         $clientes = Cliente::where('estatus', 1)
                     ->orderBy('created_at', 'DESC')
                     ->get();
-
-        $count_clientes = $clientes->count();
-        return view('clientes.index', ['clientes' => $clientes, 'count_clientes' => $count_clientes]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('clientes.create');
+        return $clientes;
     }
 
     /**
@@ -45,10 +30,8 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        if($this->save_cliente(new Cliente, $request))
-            return redirect('/clientes')->with('success', 'Cliente creado correctamente');
-        else
-            dd($cliente);
+        $cliente = $this->save_cliente(new Cliente, $request);
+        return response()->json($cliente, 201);
     }
 
     /**
@@ -57,21 +40,9 @@ class ClienteController extends Controller
      * @param  \App\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(Cliente $cliente)
     {
-        $cliente = Cliente::find($request->id);
-        return response()->json(['success' => true, 'cliente' => $cliente]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cliente $cliente)
-    {
-        return view('clientes.edit', ['cliente' => $cliente]);
+        return $cliente;
     }
 
     /**
@@ -83,11 +54,9 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        if($this->save_cliente($cliente, $request))
-            return redirect('/clientes')->with('success', 'Cliente actualizado correctamente');
-        else
-            return view('clientes.edit', ['cliente' => $cliente]);
-        }
+        $this->save_cliente($cliente, $request);
+        return response()->json($cliente, 200);
+    }
 
         /**
          * Remove the specified resource from storage.
@@ -98,11 +67,10 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         $cliente->delete();
-        return redirect('/clientes')->with('success', 'Cliente eliminado correctamente');
+        return response()->json(null, 204);
     }
 
-
-    protected function save_cliente(Cliente $cliente, Request $request )
+    protected function save_cliente(Cliente $cliente, Request $request)
     {
         $request->validate([
             // 'rfc' => 'max:13|unique:clientes',
@@ -128,12 +96,4 @@ class ClienteController extends Controller
 
         return $cliente;
     }
-
-    // public function generarPDF()
-    // {
-    //     $clientes = Cliente::orderBy('nombre', 'ASC')->get();
-    //     $pdf = PDF::loadView('clientes.list', compact('clientes'))
-    //     ->setPaper('letter','landscape');
-    //     return $pdf->stream();
-    // }
 }

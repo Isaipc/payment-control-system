@@ -5,8 +5,6 @@ use Illuminate\Database\Seeder;
 
 class UserTableSeeder extends Seeder
 {
-
-    protected $table = 'users';
     /**
      * Run the database seeds.
      *
@@ -14,7 +12,6 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->delete();
         User::create([
             'email' => 'admin@hsys.com',
             'name' => 'admin0',

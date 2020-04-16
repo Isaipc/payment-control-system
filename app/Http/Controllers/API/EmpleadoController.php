@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Empleado;
 use Illuminate\Http\Request;
 
 class EmpleadoController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,18 +19,7 @@ class EmpleadoController extends Controller
         $empleados = Empleado::where('estatus', 1)
                     ->orderBy('created_at', 'DESC')
                     ->get();
-        $count_empleados = $empleados->count();
-        return view('empleados.index', ['empleados' => $empleados, 'count_empleados' => $count_empleados]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('empleados.create');
+        return $empleados;
     }
 
     /**
@@ -43,10 +30,8 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
-        if($this->save_empleado(new Empleado, $request))
-            return redirect('/empleados')->with('success', 'Empleado creado correctamente');
-        else
-            dd($empleado);
+        $empleado = $this->save_empleado(new Empleado, $request);
+        return response()->json($empleado, 201);
     }
 
     /**
@@ -55,21 +40,9 @@ class EmpleadoController extends Controller
      * @param  \App\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(Empleado $empleado)
     {
-        $empleado = Empleado::find($request->id);
-        return response()->json(['success' => true, 'empleado' => $empleado]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Empleado  $empleado
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Empleado $empleado)
-    {
-        return view('empleados.edit', ['empleado' => $empleado]);
+        return $empleado;
     }
 
     /**
@@ -81,10 +54,8 @@ class EmpleadoController extends Controller
      */
     public function update(Request $request, Empleado $empleado)
     {
-        if($this->save_empleado($empleado, $request))
-            return redirect('/empleados')->with('success', 'Empleado actualizado correctamente');
-        else
-            return view('empleados.edit', ['empleado' => $empleado]);
+        $this->save_empleado($empleado, $request);
+        return response()->json($empleado, 200);
     }
 
         /**
@@ -95,11 +66,8 @@ class EmpleadoController extends Controller
      */
     public function destroy(Empleado $empleado)
     {
-        // $empleado->estatus = false;
-        if($empleado->delete())
-            return redirect('/empleados')->with('success', 'Empleado eliminado correctamente');
-        else
-            return redirect('/empleados')->with('error', 'El empleado no se pudo eliminar correctamente');
+        $empleado->delete();
+        return response()->json(null, 204);
     }
 
     protected function save_empleado(Empleado $empleado, Request $request)
@@ -126,12 +94,4 @@ class EmpleadoController extends Controller
 
         return $empleado;
     }
-
-    // public function generarPDF()
-    // {
-    //     $empleados = Empleado::orderBy('nombre', 'ASC')->get();
-    //     $pdf = PDF::loadView('empleados.list', compact('empleados'))
-    //     ->setPaper('letter','landscape');
-    //     return $pdf->stream();
-    // }
 }
