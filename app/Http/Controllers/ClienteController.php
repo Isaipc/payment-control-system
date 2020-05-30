@@ -11,6 +11,7 @@ class ClienteController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -44,30 +45,7 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'rfc' => 'max:13|unique:clientes',
-            // 'rfc' => 'required|max:13|unique:clientes',
-            'nombre' => 'required',
-            'apellidos' => 'required',
-            'telefono' => 'max:12'
-        ]);
-
-        $cliente = new Cliente;
-        $cliente->nombre = mb_strtoupper($request->nombre, 'UTF-8');
-        $cliente->apellidos = mb_strtoupper($request->apellidos, 'UTF-8');
-        $cliente->telefono = $request->telefono;
-        $cliente->direccion = mb_strtoupper($request->direccion, 'UTF-8');
-        $cliente->rfc = $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8');
-        $cliente->hora_entrada = $request->hora_entrada;
-        $cliente->hora_salida = $request->hora_salida;
-        $cliente->nacimiento = $request->nacimiento;
-        $cliente->pago = $request->pago;
-        $cliente->es_nadador_indie = $request->es_nadador_indie;
-
-
-        // dd($cliente->save());
-
-        if($cliente->save())
+        if($this->save_cliente(new Cliente, $request))
             return redirect('/clientes')->with('success', 'Cliente creado correctamente');
         else
             dd($cliente);
@@ -105,26 +83,7 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        $request->validate([
-            'rfc' => 'max:13|unique:clientes',
-            // 'rfc' => 'required|max:13|unique:clientes',
-            'nombre' => 'required',
-            'apellidos' => 'required',
-            'telefono' => 'max:12'
-        ]);
-
-        $cliente->nombre = mb_strtoupper($request->nombre, 'UTF-8');
-        $cliente->apellidos = mb_strtoupper($request->apellidos, 'UTF-8');
-        $cliente->telefono = $request->telefono;
-        $cliente->direccion = mb_strtoupper($request->direccion, 'UTF-8');
-        $cliente->rfc = $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8');
-        $cliente->hora_entrada = $request->hora_entrada;
-        $cliente->hora_salida = $request->hora_salida;
-        $cliente->nacimiento = $request->nacimiento;
-        $cliente->pago = $request->pago;
-        $cliente->es_nadador_indie = $request->es_nadador_indie;
-
-        if($cliente->save())
+        if($this->save_cliente($cliente, $request))
             return redirect('/clientes')->with('success', 'Cliente actualizado correctamente');
         else
             return view('clientes.edit', ['cliente' => $cliente]);
@@ -140,6 +99,34 @@ class ClienteController extends Controller
     {
         $cliente->delete();
         return redirect('/clientes')->with('success', 'Cliente eliminado correctamente');
+    }
+
+
+    protected function save_cliente(Cliente $cliente, Request $request )
+    {
+        $request->validate([
+            // 'rfc' => 'max:13|unique:clientes',
+            // 'rfc' => 'required|max:13|unique:clientes',
+            'nombre' => 'required',
+            'apellidos' => 'required',
+            'telefono' => 'max:12'
+        ]);
+
+        $cliente->fill([
+            'nombre' => mb_strtoupper($request->nombre, 'UTF-8'),
+            'apellidos' => mb_strtoupper($request->apellidos, 'UTF-8'),
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion == '' ? null : mb_strtoupper($request->direccion, 'UTF-8'),
+            'rfc' => $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8'),
+            'hora_entrada' => $request->hora_entrada,
+            'hora_salida' => $request->hora_salida,
+            'nacimiento' => $request->nacimiento,
+            'pago' => $request->pago,
+            'debe' => $request->debe,
+            'es_nadador_indie' => $request->es_nadador_indie,
+        ])->save();
+
+        return $cliente;
     }
 
     // public function generarPDF()

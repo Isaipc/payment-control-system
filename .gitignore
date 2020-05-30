@@ -10,4 +10,8 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+<<<<<<< HEAD
 /C:\\wamp64\\www\\sistema-pagos\\storage\\logs
+=======
+Cwamp64wwwsistema-pagosstoragelogs/laravel.log
+>>>>>>> api-rest

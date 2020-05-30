@@ -13,12 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/','HomeController@index');
-Auth::routes();
+// Route::get('/','HomeController@index');
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/register', 'HomeController@index')->name('home');
-
-Route::resource('empleados', 'EmpleadoController');
-Route::resource('clientes', 'ClienteController');
-Route::resource('mantenimiento', 'MantenimientoController');
+// Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/register', 'HomeController@index')->name('home');

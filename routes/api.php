@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::apiResource('categorias', 'API\CategoriaController')->except([
+    'store', 'update', 'destroy'
+]);
+Route::apiResource('tipos-cuenta', 'API\TipoCuentaController')->except([
+    'store', 'update', 'destroy'
+]);
+
+Route::apiResource('categorias.personas', 'API\PersonaController')->shallow();
+Route::apiResource('tipos-cuenta.cuentas', 'API\CuentaController')->shallow();
