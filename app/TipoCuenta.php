@@ -32,4 +32,14 @@ class TipoCuenta extends Model
     {
         return $this->hasMany('App\Cuenta');
     }
+
+    public function created_user()
+    {
+        return $this->belongsTo('App\User', 'created_user_id', 'id');
+    }
+
+    public function updated_user()
+    {
+        return $this->belongsTo('App\User', 'updated_user_id', 'id');
+    }
 }

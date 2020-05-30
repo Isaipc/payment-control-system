@@ -24,8 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriaSeeder::class);
         $this->command->info('categorias table seeded!');
 
-        $this->call(SubcategoriaSeeder::class);
-        $this->command->info('subcategorias table seeded!');
+        // $this->call(SubcategoriaSeeder::class);
+        // $this->command->info('subcategorias table seeded!');
 
         $this->call(PersonaSeeder::class);
         $this->command->info('personas table seeded!');

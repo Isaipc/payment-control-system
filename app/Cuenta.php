@@ -46,7 +46,7 @@ class Cuenta extends Model
         'tipo_cuenta_id'
     ];
 
-    public function tipoCuenta()
+    public function tipo_cuenta()
     {
         return $this->belongsTo('App\TipoCuenta');
     }
@@ -54,5 +54,15 @@ class Cuenta extends Model
     public function transacciones()
     {
         return $this->hasMany('App\Transaccion');
+    }
+
+    public function created_user()
+    {
+        return $this->belongsTo('App\User', 'created_user_id', 'id');
+    }
+
+    public function updated_user()
+    {
+        return $this->belongsTo('App\User', 'updated_user_id', 'id');
     }
 }

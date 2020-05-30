@@ -3,23 +3,28 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Persona as PersonaResource;
+use App\Http\Resources\PersonaCollection;
 use App\Persona;
-use App\Categoria;
-use App\Subcategoria;
 
 class PersonaController extends Controller
 {
+
+    protected $_persona;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($categoria_id)
     {
-        return Persona::orderBy('created_at', 'DESC')
-        ->get();
+        return new PersonaCollection(
+            Persona::where('categoria_id', $categoria_id)
+            ->orderBy('created_at', 'DESC')
+            ->get()
+        );
     }
 
     /**
@@ -28,10 +33,13 @@ class PersonaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($categoria_id, Request $request)
     {
-        $persona = $this->save_persona(new Persona, $request);
-        return response()->json($persona, 201);
+        $this->_persona = new Persona;
+        $request->categoria_id = $categoria_id;
+        $this->save($request);
+
+        return response()->json($this->_persona, 201);
     }
 
     /**
@@ -40,9 +48,9 @@ class PersonaController extends Controller
      * @param  \App\Persona  $persona
      * @return \Illuminate\Http\Response
      */
-    public function show(Persona $persona)
+    public function show($id)
     {
-        return $persona;
+        return new PersonaResource(Persona::findOrFail($id));
     }
 
     /**
@@ -54,12 +62,13 @@ class PersonaController extends Controller
      */
     public function update(Request $request, Persona $persona)
     {
-        $this->save_persona($persona, $request);
-        return response()->json($persona, 200);
+        $this->_persona = $persona;
+        $this->save($request);
+        return response()->json($this->_persona, 200);
     }
 
-        /**
-         * Remove the specified resource from storage.
+    /**
+     * Remove the specified resource from storage.
      *
      * @param  \App\Persona  $persona
      * @return \Illuminate\Http\Response
@@ -70,7 +79,7 @@ class PersonaController extends Controller
         return response()->json(null, 204);
     }
 
-    protected function save_persona(Persona $persona, Request $request)
+    protected function save(Request $request)
     {
         $request->validate([
             // 'rfc' => 'max:13|unique:personas',
@@ -80,22 +89,21 @@ class PersonaController extends Controller
             'telefono' => 'max:12'
         ]);
 
-        $persona->fill([
-            'nombre' => mb_strtoupper($request->nombre, 'UTF-8'),
-            'apellidos' => mb_strtoupper($request->apellidos, 'UTF-8'),
+        $this->_persona->fill([
+            'nombre' => $request->nombre,
+            'apellidos' => $request->apellidos,
             'telefono' => $request->telefono,
-            'direccion' => $request->direccion == '' ? null : mb_strtoupper($request->direccion, 'UTF-8'),
-            'rfc' => $request->rfc == '' ? null : mb_strtoupper($request->rfc, 'UTF-8'),
+            'direccion' => $request->direccion,
+            'rfc' => $request->rfc,
             'hora_entrada' => $request->hora_entrada,
             'hora_salida' => $request->hora_salida,
             'nacimiento' => $request->nacimiento,
             'pago_fijo' => $request->pago_fijo,
             'es_nadador_indie' => $request->es_nadador_indie,
-            'subcategoria_id' => $request->subcategoria_id,
+            'categoria_id' => $request->categoria_id,
+            'puesto' => $request->puesto,
             'created_user_id' => $request->created_user_id,
             'updated_user_id' => $request->updated_user_id
         ])->save();
-
-        return $persona;
     }
 }

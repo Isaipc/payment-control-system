@@ -13,17 +13,28 @@ class Persona extends Model
         'apellidos',
         'telefono',
         'direccion',
+        'puesto',
         'hora_entrada',
         'hora_salida',
         'nacimiento',
         'pago_fijo',
-        'subcategoria_id',
+        'categoria_id',
         'created_user_id',
         'updated_user_id',
     ];
 
-    public function subcategoria()
+    public function categoria()
     {
-        return $this->belongsTo('App\Subcategoria');
+        return $this->belongsTo('App\Categoria');
+    }
+
+    public function created_user()
+    {
+        return $this->belongsTo('App\User', 'created_user_id', 'id');
+    }
+
+    public function updated_user()
+    {
+        return $this->belongsTo('App\User', 'updated_user_id', 'id');
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Persona;
 use App\User;
-use App\Subcategoria;
+use App\Categoria;
 
 class PersonaSeeder extends Seeder
 {
@@ -14,7 +14,7 @@ class PersonaSeeder extends Seeder
      */
     public function run()
     {
-        $subcategoria = Subcategoria::firstWhere('nombre', 'Desarrollador');
+        $categoria = Categoria::firstWhere('nombre', 'Empleados');
 
         Persona::create([
             'nombre' => 'JESUS',
@@ -23,7 +23,7 @@ class PersonaSeeder extends Seeder
             'direccion' => 'CALLE JUAN ESCUTIA S/N COLONIA EL ARENAL',
             // 'nacimiento' =>  date('Y-m-d', mktime(0, 0, 0, 03, 19, 2020)),
             'pago_fijo' => 100,
-            'subcategoria_id' => $subcategoria->id,
+            'categoria_id' => $categoria->id,
             'created_user_id' => User::DEFAULT_USER,
             'updated_user_id' => User::DEFAULT_USER
         ]);
@@ -35,7 +35,7 @@ class PersonaSeeder extends Seeder
             'direccion' => 'CALLE EL VERGEL AMPLIACION BELEN GRANDE',
             // 'nacimiento' =>  date('Y-m-d', mktime(0, 0, 0, 03, 19, 2020)),
             'pago_fijo' => 100,
-            'subcategoria_id' => $subcategoria->id,
+            'categoria_id' => $categoria->id,
             'created_user_id' => User::DEFAULT_USER,
             'updated_user_id' => User::DEFAULT_USER
         ]);

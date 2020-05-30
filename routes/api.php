@@ -14,25 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::resource('empleados', 'API\EmpleadoController');
-Route::resource('clientes', 'API\ClienteController');
-Route::resource('tipo_ingresos', 'API\TipoIngresoController');
-Route::resource('tipo_egresos', 'API\TipoEgresoController');
+Route::apiResource('categorias', 'API\CategoriaController')->except([
+    'store', 'update', 'destroy'
+]);
+Route::apiResource('tipos-cuenta', 'API\TipoCuentaController')->except([
+    'store', 'update', 'destroy'
+]);
 
-Route::resource('egresos', 'API\EgresoController');
-// Route::get('egresos', 'API\EgresoController@index');
-// Route::post('egresos', 'API\EgresoController@store');
-// Route::get('egresos/{egreso}', 'API\EgresoController@show');
-// Route::put('egresos/{egreso}', 'API\EgresoController@update');
-// Route::delete('egresos/{egreso}', 'API\EgresoController@delete');
-
-Route::resource('ingresos', 'API\IngresoController');
-// Route::get('ingresos', 'API\IngresoController@index');
-// Route::post('ingresos', 'API\IngresoController@store');
-// Route::get('ingresos/{ingreso}', 'API\IngresoController@show');
-// Route::put('ingresos/{ingreso}', 'API\IngresoController@update');
-// Route::delete('ingresos/{ingreso}', 'API\IngresoController@delete');
+Route::apiResource('categorias.personas', 'API\PersonaController')->shallow();
+Route::apiResource('tipos-cuenta.cuentas', 'API\CuentaController')->shallow();

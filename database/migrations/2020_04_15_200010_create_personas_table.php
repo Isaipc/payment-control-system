@@ -17,15 +17,16 @@ class CreatePersonasTable extends Migration
             $table->id();
             $table->unsignedBigInteger('created_user_id');
             $table->unsignedBigInteger('updated_user_id');
-            $table->unsignedBigInteger('subcategoria_id');
+            $table->unsignedBigInteger('categoria_id');
             $table->foreign('created_user_id')->references('id')->on('users');
             $table->foreign('updated_user_id')->references('id')->on('users');
-            $table->foreign('subcategoria_id')->references('id')->on('subcategorias');
+            $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->string('rfc', 15)->unique()->nullable();
             $table->string('nombre', 60);
             $table->string('apellidos', 200);
             $table->string('telefono', 12);
             $table->string('direccion', 200)->nullable();
+            $table->string('puesto', 200)->nullable();
             $table->time('hora_entrada', 0)->nullable();
             $table->time('hora_salida', 0)->nullable();
             $table->date('nacimiento')->nullable();

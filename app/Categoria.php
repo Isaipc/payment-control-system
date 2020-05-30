@@ -10,6 +10,11 @@ class Categoria extends Model
     public const EMPLEADOS = 'Empleados';
     public const CLIENTES = 'Clientes';
 
+    public const CATEGORIAS = array(
+        1 => self::EMPLEADOS,
+        2 => self::CLIENTES
+    );
+
     protected $fillable =
     [
         'nombre',
@@ -17,8 +22,18 @@ class Categoria extends Model
         'updated_user_id'
     ];
 
-    protected function subcategorias()
+    public function personas()
     {
-        return $this->hasMany('App\Subcategoria');
+        return $this->hasMany('App\Persona');
+    }
+
+    public function created_user()
+    {
+        return $this->belongsTo('App\User', 'created_user_id', 'id');
+    }
+
+    public function updated_user()
+    {
+        return $this->belongsTo('App\User', 'updated_user_id', 'id');
     }
 }
