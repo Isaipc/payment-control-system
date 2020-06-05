@@ -28,7 +28,9 @@ class Persona extends JsonResource
             'pago_fijo' => $this->pago_fijo,
             'categoria' => new CategoriaResource($this->categoria),
             'created_user' => $this->created_user,
-            'updated_user' => $this->updated_user
+            'updated_user' => $this->updated_user,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }
