@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Categoria as CategoriaResource;
+use Carbon\Carbon;
 
 class Persona extends JsonResource
 {
@@ -29,8 +30,8 @@ class Persona extends JsonResource
             'categoria' => new CategoriaResource($this->categoria),
             'created_user' => $this->created_user,
             'updated_user' => $this->updated_user,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'updated_at' => Carbon::parse($this->updated_at)->toDateTimeString(),
         ];
     }
 }

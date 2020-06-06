@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\TipoCuenta as TipoCuentaResource;
+use Carbon\Carbon;
 
 class Cuenta extends JsonResource
 {
@@ -21,8 +22,8 @@ class Cuenta extends JsonResource
             'tipo_cuenta' => new TipoCuentaResource($this->tipo_cuenta),
             'created_user' => $this->created_user,
             'updated_user' => $this->updated_user,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'updated_at' => Carbon::parse($this->updated_at)->toDateTimeString(),
         ];
     }
 }
