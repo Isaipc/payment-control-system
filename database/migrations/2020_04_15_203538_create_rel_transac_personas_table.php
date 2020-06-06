@@ -15,7 +15,7 @@ class CreateRelTransacPersonasTable extends Migration
     {
         Schema::create('rel_transac_personas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('created_user_id');
+            $table->unsignedBigInteger('created_user_id')->nullable();
             $table->unsignedBigInteger('persona_id');
             $table->unsignedBigInteger('transaccion_id');
             $table->foreign('created_user_id')->references('id')->on('users');

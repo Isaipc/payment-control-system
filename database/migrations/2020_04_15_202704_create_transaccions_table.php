@@ -17,8 +17,8 @@ class CreateTransaccionsTable extends Migration
             $table->id();
             $table->string('descripcion', 200);
             $table->double('monto');
-            $table->unsignedBigInteger('created_user_id');
-            $table->unsignedBigInteger('updated_user_id');
+            $table->unsignedBigInteger('created_user_id')->nullable();
+            $table->unsignedBigInteger('updated_user_id')->nullable();
             $table->unsignedBigInteger('cuenta_id');
             $table->foreign('created_user_id')->references('id')->on('users');
             $table->foreign('updated_user_id')->references('id')->on('users');

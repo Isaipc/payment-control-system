@@ -16,8 +16,8 @@ class CreateTipoCuentasTable extends Migration
         Schema::create('tipo_cuentas', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 60);
-            $table->unsignedBigInteger('created_user_id');
-            $table->unsignedBigInteger('updated_user_id');
+            $table->unsignedBigInteger('created_user_id')->nullable();
+            $table->unsignedBigInteger('updated_user_id')->nullable();
             $table->foreign('created_user_id')->references('id')->on('users');
             $table->foreign('updated_user_id')->references('id')->on('users');
             $table->timestamps();
