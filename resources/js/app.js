@@ -11,9 +11,14 @@ import bulmaCollapsible from '@creativebulma/bulma-collapsible';
 import { ConfigProgrammatic, Modal} from 'buefy';
 import 'buefy/dist/buefy.css';
 
+Vue.config.productionTip = false;
 Vue.use(Modal);
 
-Vue.config.productionTip = false;
+ConfigProgrammatic.setOptions({
+    defaultIconPack: 'fas',
+    // defaultContainerElement: '#content'
+});
+
 
 const app = new Vue({
     el: '#app',
