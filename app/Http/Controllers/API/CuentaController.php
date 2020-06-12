@@ -82,8 +82,8 @@ class CuentaController extends Controller
         $request->validate([
             'nombre' => 'required',
             // 'tipo_cuenta_id' => 'required',
-            'created_user_id' => 'required',
-            'updated_user_id' => 'required',
+            // 'created_user_id' => 'required',
+            // 'updated_user_id' => 'required',
         ]);
 
         $this->_cuenta->fill([
