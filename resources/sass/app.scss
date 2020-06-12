@@ -2,24 +2,15 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
 // Variables
-@import 'variables';
+// @import 'variables';
 
-// Bootstrap
-// @import '~bootstrap/scss/bootstrap';
-
-//Bootswatch theme: Lumen
-// @import 'bootswatch';
 
 //Bulma
 @import '~bulma/bulma';
 
 @import '~@creativebulma/bulma-collapsible';
 
-
-.img-h-50{
-    height: 50px;
-}
-
-.a-nd{
-    text-decoration: none;
-}
+//Fontawesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';

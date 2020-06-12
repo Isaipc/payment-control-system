@@ -1,14 +1,9 @@
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from './store';
+
 Vue.use(VueRouter);
-
-// Pages
-import NotFound from './components/NotFound'
-import Login from './components/Login'
-import Logout from './components/Logout'
-import Dashboard from './components/Dashboard'
-
 
 // Router
 const router = new VueRouter({
@@ -17,14 +12,24 @@ const router = new VueRouter({
     linkActiveClass: 'is-active',
     routes : [
         {
+            path: '/test',
+            name: 'test',
+            component: () => import('./components/Test')
+        },
+        {
+            path: '/',
+            name: 'home',
+            component: () => import('./components/Dashboard')
+        },
+        {
             path: '/login',
             name: 'login',
-            component: Login,
+            component: () => import('./components/Login')
         },
         {
             path: '/logout',
             name: 'logout',
-            component: Logout,
+            component: () => import('./components/Logout'),
             meta: {
                 requiresAuth: true,
             }
@@ -32,7 +37,7 @@ const router = new VueRouter({
         {
             path: '/dashboard',
             name: 'dashboard',
-            component: Dashboard,
+            component: () => import('./components/Dashboard'),
             meta: {
                 requiresAuth: true,
             }
@@ -40,7 +45,7 @@ const router = new VueRouter({
         {
             path: '/404',
             name: '404',
-            component: NotFound,
+            component: () => import('./components/NotFound'),
         },
         {
             path: '*',
@@ -56,27 +61,33 @@ const router = new VueRouter({
         //     path: '/categorias',
         //     component: CategoriaList
         // },
-        // {
-        //     name: 'empleados',
-        //     path: '/empleados',
-        //     component: Empleados
-        // },
-        // {
-        //     name: 'clientes',
-        //     path: '/clientes',
-        //     component: Clientes
-        // },
-        // {
-        //     name: 'tipos-cuentas',
-        //     path: '/tipos-cuentas',
-        //     component: TiposCuentaList
-        // },
-        // {
-        //     name: 'cuentas',
-        //     path: '/cuentas',
-        //     component: CuentaList
-        // }
+        {
+            name: 'personas',
+            path: '/categorias/:id/personas',
+            component: () => import('./components/personas/PersonasTable'),
+        },
+        {
+            name: 'cuentas',
+            path: '/tipos-cuenta/:id/cuentas',
+            component: () => import('./components/cuentas/CuentasTable'),
+        },
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        // this route requires auth, check if logged in
+        // if not, redirect to login page.
+        if (!store.getters.loggedIn) {
+            next({
+                name: 'login',
+            })
+        } else {
+            next()
+        }
+    } else {
+        next() // make sure to always call next()!
+    }
 });
 
 export default router;
