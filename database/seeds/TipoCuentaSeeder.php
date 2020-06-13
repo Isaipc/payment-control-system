@@ -6,6 +6,14 @@ use App\TipoCuenta;
 
 class TipoCuentaSeeder extends Seeder
 {
+    public const TIPOS_CUENTAS = array(
+        // 'Bienes',
+        // 'Pasivos',
+        // 'Capital',
+        'Ingresos',
+        'Gastos',
+    );
+
     /**
      * Run the database seeds.
      *
@@ -14,7 +22,7 @@ class TipoCuentaSeeder extends Seeder
     public function run()
     {
         // llenado inicial de los tipos de cuentas:
-        foreach (TipoCuenta::TIPOS_CUENTAS  as $key => $value) {
+        foreach (self::TIPOS_CUENTAS  as $key => $value) {
             TipoCuenta::create([
                 'nombre' => $value,
                 'created_user_id' => User::DEFAULT_USER,

@@ -2,11 +2,55 @@
 
 use Illuminate\Database\Seeder;
 use App\User;
-use App\TipoCuenta;
 use App\Cuenta;
 
 class CuentaSeeder extends Seeder
 {
+    public const CUENTAS = array(
+        [
+            'tipo_cuenta' => 'Bienes',
+            'items' => array(
+                'Activos fijos',
+                'Equipo',
+                'Suministros',
+                'Material papelería',
+                'Químicos'
+            )
+        ],
+        [
+            'tipo_cuenta' => 'Pasivos',
+            'items' => array(
+                'Pasivo'
+            )
+        ],
+        [
+            'tipo_cuenta' => 'Capital',
+            'items' => array(
+                'Capital'
+            ),
+        ],
+        [
+            'tipo_cuenta' => 'Ingresos',
+            'items' => array(
+                'Servicio libre',
+                'Clase con entrenador'
+            ),
+        ],
+        [
+            'tipo_cuenta' => 'Gastos',
+            'items' => array(
+                'Gastos',
+                'Gastos salariales',
+                'Reconocimiento',
+                'Viaticos',
+                'Honorario entrenador',
+                'Honorario alberquero',
+                'Honorario administrador',
+                'Honorario suplente',
+            )
+        ]
+    );
+
     /**
      * Run the database seeds.
      *
@@ -14,56 +58,20 @@ class CuentaSeeder extends Seeder
      */
     public function run()
     {
-        //recuperando los deltas para el plan de cuentas:
-        $bienes = TipoCuenta::firstWhere('nombre', TipoCuenta::BIENES);
-        $pasivos = TipoCuenta::firstWhere('nombre', TipoCuenta::PASIVOS);
-        $capital = TipoCuenta::firstWhere('nombre', TipoCuenta::CAPITAL);
-        $ingresos = TipoCuenta::firstWhere('nombre', TipoCuenta::INGRESOS);
-        $gastos = TipoCuenta::firstWhere('nombre', TipoCuenta::GASTOS);
+        foreach (self::CUENTAS  as $group) {
+            foreach ($group['items'] as $cuenta) {
+                $tipo_cuenta_id = array_search($group['tipo_cuenta'], TipoCuentaSeeder::TIPOS_CUENTAS);
 
-        foreach (Cuenta::BIENES as $value) {
-            Cuenta::create([
-                'nombre' => $value,
-                'tipo_cuenta_id' => $bienes->id,
-                'created_user_id' => User::DEFAULT_USER,
-                'updated_user_id' => User::DEFAULT_USER,
-            ]);
-        }
-
-        foreach (Cuenta::PASIVOS as $value) {
-            Cuenta::create([
-                'nombre' => $value,
-                'tipo_cuenta_id' => $pasivos->id,
-                'created_user_id' => User::DEFAULT_USER,
-                'updated_user_id' => User::DEFAULT_USER,
-            ]);
-        }
-
-        foreach (Cuenta::CAPITAL as $value) {
-            Cuenta::create([
-                'nombre' => $value,
-                'tipo_cuenta_id' => $capital->id,
-                'created_user_id' => User::DEFAULT_USER,
-                'updated_user_id' => User::DEFAULT_USER,
-            ]);
-        }
-
-        foreach (Cuenta::INGRESOS as $value) {
-            Cuenta::create([
-                'nombre' => $value,
-                'tipo_cuenta_id' => $ingresos->id,
-                'created_user_id' => User::DEFAULT_USER,
-                'updated_user_id' => User::DEFAULT_USER,
-            ]);
-        }
-
-        foreach (Cuenta::GASTOS as $value) {
-            Cuenta::create([
-                'nombre' => $value,
-                'tipo_cuenta_id' => $gastos->id,
-                'created_user_id' => User::DEFAULT_USER,
-                'updated_user_id' => User::DEFAULT_USER,
-            ]);
+                if ($tipo_cuenta_id !== false) {
+                    // echo  "tipo cuenta: " . ($tipo_cuenta_id + 1) . " - Cuenta: " . ($cuenta) . "\n";
+                    Cuenta::create([
+                        'nombre' => $cuenta,
+                        'tipo_cuenta_id' => $tipo_cuenta_id + 1,
+                        'created_user_id' => User::DEFAULT_USER,
+                        'updated_user_id' => User::DEFAULT_USER
+                    ]);
+                }
+            }
         }
     }
 }

@@ -6,38 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cuenta extends Model
 {
-    public const BIENES = array(
-        'Activos fijos',
-        'Equipo',
-        'Suministros',
-        'Material papelería',
-        'Químicos'
-    );
-
-    public const PASIVOS = array(
-        'Pasivo'
-    );
-
-    public const CAPITAL = array(
-        'Capital'
-    );
-
-    public const INGRESOS = array(
-        'Servicio libre',
-        'Clase con entrenador'
-    );
-
-    public const GASTOS = array(
-        'Gastos',
-        'Gastos salariales',
-        'Reconocimiento',
-        'Viaticos',
-        'Honorario entrenador',
-        'Honorario alberquero',
-        'Honorario administrador',
-        'Honorario suplente',
-    );
-
     protected $fillable =
     [
         'nombre',
