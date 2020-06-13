@@ -8,11 +8,16 @@ import App from './components/App.vue';
 import router from './router';
 import store from './store';
 import bulmaCollapsible from '@creativebulma/bulma-collapsible';
-import { ConfigProgrammatic, Modal} from 'buefy';
+import { ConfigProgrammatic, Modal, Field, Input, Dialog, Toast, Table} from 'buefy';
 import 'buefy/dist/buefy.css';
 
 Vue.config.productionTip = false;
 Vue.use(Modal);
+Vue.use(Field);
+Vue.use(Input);
+Vue.use(Dialog);
+Vue.use(Toast);
+Vue.use(Table);
 
 ConfigProgrammatic.setOptions({
     defaultIconPack: 'fas',

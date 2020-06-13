@@ -1,42 +1,44 @@
 <template>
-    <modal @save="$emit('save', cuenta)">
-        <span slot="toggle-button">Agregar</span>
-
-        <span slot="title">Nuevo</span>
-
-        <span slot="body">
-            <div class="field">
-                <label class="label">Nombre</label>
-                <div class="control">
-                    <input
-                        id="nombre-cuenta"
-                        class="input"
+    <form @submit.prevent="$emit('save', cuenta)">
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Nuevo concepto</p>
+            </header>
+            <section class="modal-card-body">
+                <b-field label="Nombre">
+                    <b-input
                         type="text"
                         name="nombre"
                         v-model="cuenta.nombre"
                         placeholder="Nombre"
                         required
-                    />
-                </div>
-                <!-- <p class="help">This is a help text</p> -->
-            </div>
-        </span>
-    </modal>
+                    ></b-input>
+                </b-field>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button" type="button" @click="$parent.close()">Cancelar</button>
+                <button class="button is-primary">Guardar</button>
+            </footer>
+        </div>
+    </form>
 </template>
 
 <script>
-import Modal from "../Modal";
-
 export default {
     data() {
         return {
             cuenta: {
-                nombre: "",
+                nombre: ""
             }
         };
     },
-    components: {
-        Modal
-    },
+    // props: {
+    //     initCuenta: {
+    //         type: Object,
+    //         default: {
+    //             nombre: ""
+    //         }
+    //     }
+    // }
 };
 </script>

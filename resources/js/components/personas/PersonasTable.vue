@@ -2,8 +2,22 @@
     <div>
         <h2 class="subtitle">Catalogos</h2>
         <h1 class="title">{{ categoria }}</h1>
-        <persona-form id="persona-form" :categoria="categoria"></persona-form>
+
+        <b-modal
+            :active.sync="isModalActive"
+            has-modal-card
+            trap-focus
+            :destroy-on-hide="false"
+            aria-role="dialog"
+            aria-modal
+        >
+            <persona-form id="persona-form" @save="addPersona"></persona-form>
+        </b-modal>
+
+        <button class="button is-primary" @click="isModalActive = true">Agregar</button>
         <br />
+        <br />
+
         <div class="notification is-info is-light" v-if="isEmpty">No hay registros</div>
         <div class="table-container" v-else>
             <table class="table is-bordered is-stripped is-hoverable is-narrow">
@@ -60,7 +74,7 @@ export default {
             personas: [],
             currentPersona: null,
             currentIndex: -1,
-            categoria: ''
+            categoria: ""
         };
     },
     components: {
@@ -92,14 +106,14 @@ export default {
             this.currentIndex = index;
             this.currentPersona = persona;
         },
-        setCategoria(id){
+        setCategoria(id) {
             CategoriaDataService.get(id)
-            .then(response => {
-                this.categoria = response.data.data.nombre;
-            })
-            .catch(error => {
-                console.log(error);
-            });
+                .then(response => {
+                    this.categoria = response.data.data.nombre;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     },
     created() {

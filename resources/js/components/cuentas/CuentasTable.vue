@@ -3,53 +3,54 @@
         <h2 class="subtitle">Catalogos</h2>
         <h1 class="title">{{ tipoCuenta }}</h1>
 
-        <cuenta-form id="cuenta-form" @save="addCuenta"></cuenta-form>
+        <b-modal
+            :active.sync="isModalActive"
+            has-modal-card
+            trap-focus
+            :destroy-on-hide="false"
+            aria-role="dialog"
+            aria-modal
+        >
+            <cuenta-form id="cuenta-form" @save="addCuenta"></cuenta-form>
+        </b-modal>
+
+        <div class="colums">
+            <button class="button is-primary" @click="isModalActive = true">Agregar</button>
+        </div>
+        <br />
         <br />
 
-        <div class="notification is-info is-light" v-if="isEmpty">No hay registros</div>
-
-        <div class="table-container" v-else>
-            <div class="table-container">
-                <table class="table is-bordered is-striped is-hoverable is-narrow">
-                    <thead class="is-uppercase">
-                        <th>id</th>
-                        <th>nombre</th>
-                        <th>creado</th>
-                        <th>actualizado</th>
-                        <th></th>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(cuenta, index) in cuentas"
-                            :key="index"
-                            :class="{ 'is-selected': index == currentIndex }"
-                            @click="setActiveCuenta(cuenta, index)"
-                        >
-                            <th>{{ cuenta.id }}</th>
-                            <td>{{ cuenta.nombre }}</td>
-                            <td>{{ cuenta.created_at }}</td>
-                            <td>{{ cuenta.updated_at }}</td>
-                            <td>
-                                <div class="buttons has-addons">
-                                    <router-link
-                                        :to="{name: 'edit', params: { id: cuenta.id }}"
-                                        class="button is-primary"
-                                    >
-                                        <i class="fas fa-pen"></i>
-                                    </router-link>
-                                    <button
-                                        class="button is-danger"
-                                        @click="deleteCuenta(cuenta.id)"
-                                    >
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <b-table
+            :data="cuentas"
+            :striped="true"
+            :hoverable="true"
+            :selected.sync="currentCuenta"
+            :paginated="isPaginated"
+            :per-page="perPage"
+        >
+            <template slot-scope="props">
+                <b-table-column field="id" label="Id" sortable numeric>{{ props.row.id }}</b-table-column>
+                <b-table-column field="nombre" label="Nombre" sortable>{{ props.row.nombre }}</b-table-column>
+                <b-table-column
+                    field="created_at"
+                    label="Creado"
+                    sortable
+                >{{ props.row.created_at }}</b-table-column>
+                <b-table-column
+                    field="updated_at"
+                    label="Actualizado"
+                    sortable
+                >{{ props.row.updated_at }}</b-table-column>
+                <b-table-column>
+                    <button class="button is-primary" @click="editCuenta(props.row)">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="button is-danger" @click="deleteCuenta(props.row)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </b-table-column>
+            </template>
+        </b-table>
     </div>
 </template>
 
@@ -65,7 +66,10 @@ export default {
             cuentas: [],
             currentCuenta: null,
             currentIndex: -1,
-            tipoCuenta: null
+            tipoCuenta: null,
+            isModalActive: false,
+            isPaginated: true,
+            perPage: 5
         };
     },
     computed: {
@@ -80,22 +84,46 @@ export default {
         addCuenta(cuenta) {
             CuentaDataService.create(this.$route.params.id, cuenta)
                 .then(response => {
+                    this.isModalActive = false;
+                    this.fillCuentasTable();
                     console.log(response);
-                    this.refresh();
                 })
                 .catch(error => {
                     console.log(error);
                 });
         },
-        // deleteCuenta(id) {
-        //     CuentaDataService.delete(id)
-        //         .then(response => {
-        //             this.cuentas = response.data.data;
-        //         })
-        //         .catch(error => {
-        //             console.log(error);
-        //         });
-        // },
+        editCuenta(cuenta) {
+            this.isModalActive = true;
+        },
+        updateCuenta(cuenta) {
+            // CuentaDataService.update(id, this.currentCuenta)
+            //     .then(response => {
+            //         this.cuentas = response.data.data;
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     });
+        },
+        deleteCuenta(cuenta) {
+            this.$buefy.dialog.confirm({
+                title: "Borrar concepto",
+                message: `¿Estas seguro que desea borrar <b> ${cuenta.nombre}</b>? Esta acción no se puede revertir.`,
+                confirmText: "Borrar",
+                cancelText: "Cancelar",
+                type: "is-danger",
+                hasIcon: true,
+                onConfirm: () => {
+                    CuentaDataService.delete(cuenta.id)
+                        .then(response => {
+                            this.fillCuentasTable();
+                            this.$buefy.toast.open("Borrado completado");
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
+            });
+        },
 
         fillCuentasTable() {
             CuentaDataService.getAll(this.$route.params.id)
@@ -106,16 +134,6 @@ export default {
                     console.log(error);
                 });
         },
-
-        // updateCuenta(id) {
-        //     CuentaDataService.delete(id)
-        //         .then(response => {
-        //             this.cuentas = response.data.data;
-        //         })
-        //         .catch(error => {
-        //             console.log(error);
-        //         });
-        // },
 
         refresh() {
             this.fillCuentasTable();
