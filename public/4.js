@@ -42,6 +42,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -87,15 +92,15 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "container" }, [
+      _vm.error
+        ? _c("div", { staticClass: "notification is-danger" }, [
+            _c("p", [_vm._v(_vm._s(_vm.error))])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _c("div", { staticClass: "column is-4 is-offset-4" }, [
         _c("div", { staticClass: "box" }, [
           _c("h1", { staticClass: "title" }, [_vm._v("Iniciar sesión")]),
-          _vm._v(" "),
-          _vm.error
-            ? _c("div", { staticClass: "notification is-danger" }, [
-                _c("p", [_vm._v(_vm._s(_vm.error))])
-              ])
-            : _vm._e(),
           _vm._v(" "),
           _c(
             "form",
@@ -109,64 +114,60 @@ var render = function() {
               }
             },
             [
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "control" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.username,
-                        expression: "username"
-                      }
-                    ],
-                    staticClass: "input",
-                    attrs: { type: "email", placeholder: "user@example.com" },
-                    domProps: { value: _vm.username },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.username = $event.target.value
-                      }
+              _c(
+                "b-field",
+                { attrs: { label: "Email" } },
+                [
+                  _c("b-input", {
+                    attrs: {
+                      type: "email",
+                      placeholder: "email",
+                      required: ""
+                    },
+                    model: {
+                      value: _vm.username,
+                      callback: function($$v) {
+                        _vm.username = $$v
+                      },
+                      expression: "username"
                     }
                   })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "control" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.password,
-                        expression: "password"
-                      }
-                    ],
-                    staticClass: "input",
-                    attrs: { type: "password" },
-                    domProps: { value: _vm.password },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.password = $event.target.value
-                      }
-                    }
-                  })
-                ])
-              ]),
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
-                "button",
-                { staticClass: "button is-primary", attrs: { type: "submit" } },
-                [_vm._v("Entrar")]
-              )
-            ]
+                "b-field",
+                { attrs: { label: "Contraseña" } },
+                [
+                  _c("b-input", {
+                    attrs: {
+                      type: "password",
+                      "password-reveal": "",
+                      placeholder: "contraseña",
+                      required: ""
+                    },
+                    model: {
+                      value: _vm.password,
+                      callback: function($$v) {
+                        _vm.password = $$v
+                      },
+                      expression: "password"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-checkbox", [_vm._v("Remember me")]),
+              _vm._v(" "),
+              _c("b-field", [
+                _c("button", { staticClass: "button is-primary" }, [
+                  _vm._v("Entrar")
+                ])
+              ])
+            ],
+            1
           )
         ])
       ])

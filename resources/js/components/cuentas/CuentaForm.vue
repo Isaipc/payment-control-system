@@ -2,13 +2,12 @@
     <form @submit.prevent="$emit('save', cuenta)">
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Nuevo concepto</p>
+                <p class="modal-card-title">Nuevo concepto de {{ title }}</p>
             </header>
             <section class="modal-card-body">
                 <b-field label="Nombre">
                     <b-input
                         type="text"
-                        name="nombre"
                         v-model="cuenta.nombre"
                         placeholder="Nombre"
                         required
@@ -32,13 +31,11 @@ export default {
             }
         };
     },
-    // props: {
-    //     initCuenta: {
-    //         type: Object,
-    //         default: {
-    //             nombre: ""
-    //         }
-    //     }
-    // }
+    props: {
+        title: {
+            type: String,
+            default: "concepto"
+        }
+    }
 };
 </script>

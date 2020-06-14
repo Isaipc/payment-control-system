@@ -8,7 +8,7 @@ import App from './components/App.vue';
 import router from './router';
 import store from './store';
 import bulmaCollapsible from '@creativebulma/bulma-collapsible';
-import { ConfigProgrammatic, Modal, Field, Input, Dialog, Toast, Table} from 'buefy';
+import { ConfigProgrammatic, Modal, Field, Input, Dialog, Toast, Table, Select, Icon, Checkbox, Button, Switch } from 'buefy';
 import 'buefy/dist/buefy.css';
 
 Vue.config.productionTip = false;
@@ -18,6 +18,11 @@ Vue.use(Input);
 Vue.use(Dialog);
 Vue.use(Toast);
 Vue.use(Table);
+Vue.use(Select);
+Vue.use(Icon);
+Vue.use(Checkbox);
+Vue.use(Button);
+Vue.use(Switch);
 
 ConfigProgrammatic.setOptions({
     defaultIconPack: 'fas',
@@ -39,7 +44,7 @@ const app = new Vue({
 
 $((e) => {
 
-    $('.modal .input').keydown( f => {
+    $('.modal .input').keydown(f => {
         console.log(f);
         // $(".modal").removeClass("is-active");
     });

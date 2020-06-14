@@ -72972,6 +72972,11 @@ Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Input"]);
 Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Dialog"]);
 Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Toast"]);
 Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Table"]);
+Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Select"]);
+Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Icon"]);
+Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Checkbox"]);
+Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Button"]);
+Vue.use(buefy__WEBPACK_IMPORTED_MODULE_4__["Switch"]);
 buefy__WEBPACK_IMPORTED_MODULE_4__["ConfigProgrammatic"].setOptions({
   defaultIconPack: 'fas' // defaultContainerElement: '#content'
 
@@ -73274,7 +73279,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/test',
     name: 'test',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./components/Test */ "./resources/js/components/Test.vue"));
+      return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ./components/Test */ "./resources/js/components/Test.vue"));
     }
   }, {
     path: '/',
@@ -73329,13 +73334,13 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     name: 'personas',
     path: '/categorias/:id/personas',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ./components/personas/PersonasTable */ "./resources/js/components/personas/PersonasTable.vue"));
+      return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./components/personas/PersonasTable */ "./resources/js/components/personas/PersonasTable.vue"));
     }
   }, {
     name: 'cuentas',
     path: '/tipos-cuenta/:id/cuentas',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./components/cuentas/CuentasTable */ "./resources/js/components/cuentas/CuentasTable.vue"));
+      return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./components/cuentas/CuentasTable */ "./resources/js/components/cuentas/CuentasTable.vue"));
     }
   }]
 });

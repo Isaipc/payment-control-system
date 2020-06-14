@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2 class="subtitle">Catalogos</h2>
-        <h1 class="title">{{ categoria }}</h1>
+        <h1 class="title">{{ categoria.nombre }}</h1>
 
         <b-modal
             :active.sync="isModalActive"
@@ -11,53 +11,101 @@
             aria-role="dialog"
             aria-modal
         >
-            <persona-form id="persona-form" @save="addPersona"></persona-form>
+            <persona-form id="persona-form" @save="addPersona" :categoria="nombreCategoria"></persona-form>
         </b-modal>
 
-        <button class="button is-primary" @click="isModalActive = true">Agregar</button>
-        <br />
-        <br />
+        <b-field grouped group-multiline>
+            <div class="control">
+                <b-button icon-left="plus" class="is-primary" @click="isModalActive = true">Agregar</b-button>
+            </div>
+            <div class="control">
+                <b-select v-model="perPage" :disabled="!isPaginated">
+                    <option
+                        v-for="(item, index) in perPageList"
+                        :key="index"
+                        :value="item"
+                    >{{ item }} por página</option>
+                </b-select>
+            </div>
+            <div class="control">
+                <b-switch v-model="isSearchable">Realizar búsqueda</b-switch>
+            </div>
+        </b-field>
 
-        <div class="notification is-info is-light" v-if="isEmpty">No hay registros</div>
-        <div class="table-container" v-else>
-            <table class="table is-bordered is-stripped is-hoverable is-narrow">
-                <thead class="is-uppercase">
-                    <th>id</th>
-                    <th>nombre</th>
-                    <th>apellidos</th>
-                    <th>creado</th>
-                    <th>actualizado</th>
-                    <th></th>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="(persona, index) in personas"
-                        :key="persona.id"
-                        :class="{ 'is-selected': index == currentIndex }"
-                        @click="setActivePersona(persona, index)"
-                    >
-                        <th>{{ persona.id }}</th>
-                        <td>{{ persona.nombre }}</td>
-                        <td>{{ persona.apellidos }}</td>
-                        <td>{{ persona.created_at }}</td>
-                        <td>{{ persona.updated_at }}</td>
-                        <td>
-                            <div class="buttons has-addons">
-                                <router-link
-                                    :to="{name: 'edit', params: { id: persona.id }}"
-                                    class="button is-primary"
-                                >
-                                    <i class="fas fa-pen"></i>
-                                </router-link>
-                                <button class="button is-danger" @click="deletePersona(persona.id)">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <b-table
+            :data="personas"
+            :striped="true"
+            :narrowed="true"
+            :hoverable="true"
+            :selected.sync="currentPersona"
+            :paginated="isPaginated"
+            :per-page="perPage"
+            :pagination-position="paginationPosition"
+        >
+            <template slot-scope="props">
+                <b-table-column
+                    field="id"
+                    label="Id"
+                    sortable
+                    numeric
+                    width="100"
+                    :searchable="isSearchable"
+                >{{ props.row.id }}</b-table-column>
+                <b-table-column
+                    field="nombre"
+                    label="Nombre"
+                    sortable
+                    :searchable="isSearchable"
+                >{{ props.row.nombre }}</b-table-column>
+                <b-table-column
+                    field="apellidos"
+                    label="Apellidos"
+                    sortable
+                    :searchable="isSearchable"
+                >{{ props.row.apellidos }}</b-table-column>
+                <b-table-column field="telefono" label="Telefono" sortable>{{ props.row.telefono }}</b-table-column>
+                <b-table-column
+                    field="created_at"
+                    label="Creado"
+                    sortable
+                >{{ props.row.created_at }}</b-table-column>
+                <b-table-column
+                    field="updated_at"
+                    label="Actualizado"
+                    sortable
+                >{{ props.row.updated_at }}</b-table-column>
+                <!-- <b-table-column
+                    field="horario_entrada"
+                    label="Hora entrada"
+                    sortable
+                    v-if="categoria.nombre === 'Empleados'"
+                >{{ props.row.horario_entrada }}</b-table-column>
+                <b-table-column
+                    field="horario_salida"
+                    label="Hora salida"
+                    sortable
+                    v-if="categoria.nombre === 'Empleados'"
+                >{{ props.row.horario_salida }}</b-table-column>-->
+                <b-table-column>
+                    <button class="button is-primary" @click="editPersona(props.row)">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="button is-danger" @click="deletePersona(props.row)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </b-table-column>
+            </template>
+            <template slot="empty">
+                <section class="section">
+                    <div class="notification is-info is-light has-text-centered">
+                        <p>
+                            <b-icon icon="frown" size="is-large"></b-icon>
+                        </p>
+                        <p>No hay registros</p>
+                    </div>
+                </section>
+            </template>
+        </b-table>
     </div>
 </template>
 
@@ -74,7 +122,15 @@ export default {
             personas: [],
             currentPersona: null,
             currentIndex: -1,
-            categoria: ""
+            categoria: {
+                nombre: ""
+            },
+            isModalActive: false,
+            isPaginated: true,
+            isSearchable: false,
+            perPageList: [5, 10, 15, 20],
+            perPage: 5,
+            paginationPosition: "bottom"
         };
     },
     components: {
@@ -83,10 +139,48 @@ export default {
     computed: {
         isEmpty() {
             return this.personas.length == 0;
+        },
+        nombreCategoria() {
+            return this.categoria.nombre.toLowerCase().slice(0, -1);
         }
     },
     methods: {
-        deletePersona() {},
+        addPersona(persona) {
+            PersonaDataService.create(this.$route.params.id, persona)
+                .then(response => {
+                    this.isModalActive = false;
+                    this.fillPersonasTable();
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        editPersona(persona) {
+            this.isModalActive = true;
+        },
+
+        deletePersona(persona) {
+            this.$buefy.dialog.confirm({
+                title: `Borrar ${this.categoria.nombre}`,
+                message: `¿Estas seguro que desea borrar <b> ${persona.nombre}</b>? Esta acción no se puede revertir.`,
+                confirmText: "Borrar",
+                cancelText: "Cancelar",
+                type: "is-danger",
+                hasIcon: true,
+                onConfirm: () => {
+                    PersonaDataService.delete(persona.id)
+                        .then(response => {
+                            this.fillPersonasTable();
+                            this.$buefy.toast.open("Borrado completado");
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
+            });
+        },
 
         fillPersonasTable() {
             PersonaDataService.getAll(this.$route.params.id)
@@ -109,7 +203,7 @@ export default {
         setCategoria(id) {
             CategoriaDataService.get(id)
                 .then(response => {
-                    this.categoria = response.data.data.nombre;
+                    this.categoria = response.data.data;
                 })
                 .catch(error => {
                     console.log(error);

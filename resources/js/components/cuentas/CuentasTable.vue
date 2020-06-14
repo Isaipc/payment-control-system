@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2 class="subtitle">Catalogos</h2>
-        <h1 class="title">{{ tipoCuenta }}</h1>
+        <h1 class="title">{{ tipoCuenta.nombre }}</h1>
 
         <b-modal
             :active.sync="isModalActive"
@@ -11,14 +11,26 @@
             aria-role="dialog"
             aria-modal
         >
-            <cuenta-form id="cuenta-form" @save="addCuenta"></cuenta-form>
+            <cuenta-form id="cuenta-form" @save="addCuenta" :title="nombreTipoCuenta"></cuenta-form>
         </b-modal>
 
-        <div class="colums">
-            <button class="button is-primary" @click="isModalActive = true">Agregar</button>
-        </div>
-        <br />
-        <br />
+        <b-field grouped group-multiline>
+            <div class="control">
+                <b-button icon-left="plus" class="is-primary" @click="isModalActive = true">Agregar</b-button>
+            </div>
+            <div class="control">
+                <b-select v-model="perPage" :disabled="!isPaginated">
+                    <option
+                        v-for="(item, index) in perPageList"
+                        :key="index"
+                        :value="item"
+                    >{{ item }} por página</option>
+                </b-select>
+            </div>
+            <div class="control">
+                <b-switch v-model="isSearchable">Realizar búsqueda</b-switch>
+            </div>
+        </b-field>
 
         <b-table
             :data="cuentas"
@@ -27,10 +39,23 @@
             :selected.sync="currentCuenta"
             :paginated="isPaginated"
             :per-page="perPage"
+            :pagination-position="paginationPosition"
         >
             <template slot-scope="props">
-                <b-table-column field="id" label="Id" sortable numeric>{{ props.row.id }}</b-table-column>
-                <b-table-column field="nombre" label="Nombre" sortable>{{ props.row.nombre }}</b-table-column>
+                <b-table-column
+                    field="id"
+                    label="Id"
+                    sortable
+                    numeric
+                    width="100"
+                    :searchable="isSearchable"
+                >{{ props.row.id }}</b-table-column>
+                <b-table-column
+                    field="nombre"
+                    label="Nombre"
+                    sortable
+                    :searchable="isSearchable"
+                >{{ props.row.nombre }}</b-table-column>
                 <b-table-column
                     field="created_at"
                     label="Creado"
@@ -50,6 +75,16 @@
                     </button>
                 </b-table-column>
             </template>
+            <template slot="empty">
+                <section class="section">
+                    <div class="notification is-info is-light has-text-centered">
+                        <p>
+                            <b-icon icon="frown" size="is-large"></b-icon>
+                        </p>
+                        <p>No hay registros</p>
+                    </div>
+                </section>
+            </template>
         </b-table>
     </div>
 </template>
@@ -66,15 +101,23 @@ export default {
             cuentas: [],
             currentCuenta: null,
             currentIndex: -1,
-            tipoCuenta: null,
+            tipoCuenta: {
+                nombre: ""
+            },
             isModalActive: false,
             isPaginated: true,
-            perPage: 5
+            isSearchable: false,
+            perPageList: [5, 10, 15, 20],
+            perPage: 5,
+            paginationPosition: "bottom"
         };
     },
     computed: {
         isEmpty() {
             return this.cuentas.length == 0;
+        },
+        nombreTipoCuenta() {
+            return this.tipoCuenta.nombre.toLowerCase().slice(0, -1);
         }
     },
     components: {
@@ -148,7 +191,7 @@ export default {
         setTipoCuenta() {
             TiposCuentaDataService.get(this.$route.params.id)
                 .then(response => {
-                    this.tipoCuenta = response.data.data.nombre;
+                    this.tipoCuenta = response.data.data;
                 })
                 .catch(error => {
                     console.log(error);
