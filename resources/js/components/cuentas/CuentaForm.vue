@@ -6,12 +6,7 @@
             </header>
             <section class="modal-card-body">
                 <b-field label="Nombre">
-                    <b-input
-                        type="text"
-                        v-model="cuenta.nombre"
-                        placeholder="Nombre"
-                        required
-                    ></b-input>
+                    <b-input type="text" v-model="cuenta.nombre" placeholder="Nombre" required></b-input>
                 </b-field>
             </section>
             <footer class="modal-card-foot">
@@ -26,12 +21,14 @@
 export default {
     data() {
         return {
-            cuenta: {
-                nombre: ""
-            }
+            cuenta: this.initCuenta
         };
     },
     props: {
+        initCuenta: {
+            type: Object,
+            required: true
+        },
         title: {
             type: String,
             default: "concepto"

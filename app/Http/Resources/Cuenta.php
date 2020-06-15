@@ -19,6 +19,7 @@ class Cuenta extends JsonResource
         return [
             'id' => $this->id,
             'nombre' => $this->nombre,
+            'tipo_cuenta_id' => $this->tipo_cuenta_id,
             'tipo_cuenta' => new TipoCuentaResource($this->tipo_cuenta),
             'created_user' => $this->created_user,
             'updated_user' => $this->updated_user,

@@ -7,16 +7,16 @@
             :active.sync="isModalActive"
             has-modal-card
             trap-focus
-            :destroy-on-hide="false"
+            :destroy-on-hide="true"
             aria-role="dialog"
             aria-modal
         >
-            <cuenta-form id="cuenta-form" @save="addCuenta" :title="nombreTipoCuenta"></cuenta-form>
+            <cuenta-form :title="nombreTipoCuenta" :init-cuenta="currentCuenta" @save="saveCuenta"></cuenta-form>
         </b-modal>
 
         <b-field grouped group-multiline>
             <div class="control">
-                <b-button icon-left="plus" class="is-primary" @click="isModalActive = true">Agregar</b-button>
+                <b-button icon-left="plus" class="is-primary" @click="newCuenta">Agregar</b-button>
             </div>
             <div class="control">
                 <b-select v-model="perPage" :disabled="!isPaginated">
@@ -93,17 +93,20 @@
 import CuentaForm from "./CuentaForm";
 import TiposCuentaDataService from "../../services/TiposCuentaDataService";
 import CuentaDataService from "../../services/CuentaDataService";
-import axios from "axios";
+
+const defaultData = {
+    id: -1,
+    nombre: ""
+};
 
 export default {
     data() {
         return {
             cuentas: [],
-            currentCuenta: null,
-            currentIndex: -1,
             tipoCuenta: {
                 nombre: ""
             },
+            currentCuenta: defaultData,
             isModalActive: false,
             isPaginated: true,
             isSearchable: false,
@@ -124,29 +127,37 @@ export default {
         CuentaForm
     },
     methods: {
-        addCuenta(cuenta) {
-            CuentaDataService.create(this.$route.params.id, cuenta)
-                .then(response => {
-                    this.isModalActive = false;
-                    this.fillCuentasTable();
-                    console.log(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+        newCuenta() {
+            this.clearForm(true);
         },
+
         editCuenta(cuenta) {
+            this.currentCuenta = cuenta;
             this.isModalActive = true;
         },
-        updateCuenta(cuenta) {
-            // CuentaDataService.update(id, this.currentCuenta)
-            //     .then(response => {
-            //         this.cuentas = response.data.data;
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+
+        saveCuenta(cuenta) {
+            if (cuenta.id == -1) {
+                CuentaDataService.create(this.$route.params.id, cuenta)
+                    .then(response => {
+                        this.clearForm(false);
+                        this.$buefy.toast.open("Guardado completado");
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                CuentaDataService.update(cuenta.id, cuenta)
+                    .then(response => {
+                        this.clearForm(false);
+                        this.$buefy.toast.open("Guardado completado");
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
         },
+
         deleteCuenta(cuenta) {
             this.$buefy.dialog.confirm({
                 title: "Borrar concepto",
@@ -180,14 +191,10 @@ export default {
 
         refresh() {
             this.fillCuentasTable();
-            this.setActiveCuenta(null, -1);
             this.setTipoCuenta();
+            this.clearForm(false);
         },
 
-        setActiveCuenta(cuenta, index) {
-            this.currentCuenta = cuenta;
-            this.currentIndex = index;
-        },
         setTipoCuenta() {
             TiposCuentaDataService.get(this.$route.params.id)
                 .then(response => {
@@ -196,6 +203,11 @@ export default {
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        clearForm(isModalActive) {
+            this.fillCuentasTable();
+            this.currentCuenta = defaultData;
+            this.isModalActive = isModalActive;
         }
     },
     created() {

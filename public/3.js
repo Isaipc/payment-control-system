@@ -28,20 +28,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      cuenta: {
-        nombre: ""
-      }
+      cuenta: this.initCuenta
     };
   },
   props: {
+    initCuenta: {
+      type: Object,
+      required: true
+    },
     title: {
       type: String,
       "default": "concepto"
@@ -63,8 +60,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CuentaForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CuentaForm */ "./resources/js/components/cuentas/CuentaForm.vue");
 /* harmony import */ var _services_TiposCuentaDataService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/TiposCuentaDataService */ "./resources/js/services/TiposCuentaDataService.js");
 /* harmony import */ var _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/CuentaDataService */ "./resources/js/services/CuentaDataService.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
 //
 //
 //
@@ -159,16 +154,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+var defaultData = {
+  id: -1,
+  nombre: ""
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       cuentas: [],
-      currentCuenta: null,
-      currentIndex: -1,
       tipoCuenta: {
         nombre: ""
       },
+      currentCuenta: defaultData,
       isModalActive: false,
       isPaginated: true,
       isSearchable: false,
@@ -189,29 +186,33 @@ __webpack_require__.r(__webpack_exports__);
     CuentaForm: _CuentaForm__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   methods: {
-    addCuenta: function addCuenta(cuenta) {
-      var _this = this;
-
-      _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__["default"].create(this.$route.params.id, cuenta).then(function (response) {
-        _this.isModalActive = false;
-
-        _this.fillCuentasTable();
-
-        console.log(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
+    newCuenta: function newCuenta() {
+      this.clearForm(true);
     },
     editCuenta: function editCuenta(cuenta) {
+      this.currentCuenta = cuenta;
       this.isModalActive = true;
     },
-    updateCuenta: function updateCuenta(cuenta) {// CuentaDataService.update(id, this.currentCuenta)
-      //     .then(response => {
-      //         this.cuentas = response.data.data;
-      //     })
-      //     .catch(error => {
-      //         console.log(error);
-      //     });
+    saveCuenta: function saveCuenta(cuenta) {
+      var _this = this;
+
+      if (cuenta.id == -1) {
+        _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__["default"].create(this.$route.params.id, cuenta).then(function (response) {
+          _this.clearForm(false);
+
+          _this.$buefy.toast.open("Guardado completado");
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      } else {
+        _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__["default"].update(cuenta.id, cuenta).then(function (response) {
+          _this.clearForm(false);
+
+          _this.$buefy.toast.open("Guardado completado");
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
     },
     deleteCuenta: function deleteCuenta(cuenta) {
       var _this2 = this;
@@ -245,12 +246,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     refresh: function refresh() {
       this.fillCuentasTable();
-      this.setActiveCuenta(null, -1);
       this.setTipoCuenta();
-    },
-    setActiveCuenta: function setActiveCuenta(cuenta, index) {
-      this.currentCuenta = cuenta;
-      this.currentIndex = index;
+      this.clearForm(false);
     },
     setTipoCuenta: function setTipoCuenta() {
       var _this4 = this;
@@ -260,6 +257,11 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    clearForm: function clearForm(isModalActive) {
+      this.fillCuentasTable();
+      this.currentCuenta = defaultData;
+      this.isModalActive = isModalActive;
     }
   },
   created: function created() {
@@ -393,7 +395,7 @@ var render = function() {
             active: _vm.isModalActive,
             "has-modal-card": "",
             "trap-focus": "",
-            "destroy-on-hide": false,
+            "destroy-on-hide": true,
             "aria-role": "dialog",
             "aria-modal": ""
           },
@@ -405,8 +407,11 @@ var render = function() {
         },
         [
           _c("cuenta-form", {
-            attrs: { id: "cuenta-form", title: _vm.nombreTipoCuenta },
-            on: { save: _vm.addCuenta }
+            attrs: {
+              title: _vm.nombreTipoCuenta,
+              "init-cuenta": _vm.currentCuenta
+            },
+            on: { save: _vm.saveCuenta }
           })
         ],
         1
@@ -422,11 +427,7 @@ var render = function() {
               {
                 staticClass: "is-primary",
                 attrs: { "icon-left": "plus" },
-                on: {
-                  click: function($event) {
-                    _vm.isModalActive = true
-                  }
-                }
+                on: { click: _vm.newCuenta }
               },
               [_vm._v("Agregar")]
             )
