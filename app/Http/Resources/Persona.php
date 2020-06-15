@@ -28,6 +28,7 @@ class Persona extends JsonResource
             'nacimiento' => $this->nacimiento,
             'pago_fijo' => $this->pago_fijo,
             'categoria' => new CategoriaResource($this->categoria),
+            'categoria_id' => $this->categoria_id,
             'created_user' => $this->created_user,
             'updated_user' => $this->updated_user,
             'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),

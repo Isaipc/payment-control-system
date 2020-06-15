@@ -1,53 +1,5 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cuentas/CuentaForm.vue?vue&type=script&lang=js&":
-/*!*****************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/cuentas/CuentaForm.vue?vue&type=script&lang=js& ***!
-  \*****************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      cuenta: this.initCuenta
-    };
-  },
-  props: {
-    initCuenta: {
-      type: Object,
-      required: true
-    },
-    title: {
-      type: String,
-      "default": "concepto"
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cuentas/CuentasTable.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/cuentas/CuentasTable.vue?vue&type=script&lang=js& ***!
@@ -57,9 +9,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _CuentaForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CuentaForm */ "./resources/js/components/cuentas/CuentaForm.vue");
-/* harmony import */ var _services_TiposCuentaDataService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/TiposCuentaDataService */ "./resources/js/services/TiposCuentaDataService.js");
-/* harmony import */ var _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/CuentaDataService */ "./resources/js/services/CuentaDataService.js");
+/* harmony import */ var _services_TiposCuentaDataService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/TiposCuentaDataService */ "./resources/js/services/TiposCuentaDataService.js");
+/* harmony import */ var _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/CuentaDataService */ "./resources/js/services/CuentaDataService.js");
 //
 //
 //
@@ -154,18 +105,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var defaultData = {
-  id: -1,
-  nombre: ""
-};
+function defaultItem() {
+  return {
+    id: -1,
+    nombre: ""
+  };
+}
+
+function defaultGroup() {
+  return {
+    id: -1,
+    nombre: ""
+  };
+}
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      cuentas: [],
-      tipoCuenta: {
-        nombre: ""
-      },
-      currentCuenta: defaultData,
+      items: [],
+      group: new defaultGroup(),
+      currentItem: null,
       isModalActive: false,
       isPaginated: true,
       isSearchable: false,
@@ -176,37 +135,44 @@ var defaultData = {
   },
   computed: {
     isEmpty: function isEmpty() {
-      return this.cuentas.length == 0;
+      return this.items.length == 0;
     },
-    nombreTipoCuenta: function nombreTipoCuenta() {
-      return this.tipoCuenta.nombre.toLowerCase().slice(0, -1);
+    title: function title() {
+      return this.group.nombre.toLowerCase().slice(0, -1);
     }
   },
   components: {
-    CuentaForm: _CuentaForm__WEBPACK_IMPORTED_MODULE_0__["default"]
+    CuentaForm: function CuentaForm() {
+      return __webpack_require__.e(/*! import() */ 7).then(__webpack_require__.bind(null, /*! ./CuentaForm */ "./resources/js/components/cuentas/CuentaForm.vue"));
+    }
   },
   methods: {
-    newCuenta: function newCuenta() {
-      this.clearForm(true);
+    newItem: function newItem() {
+      this.configForm(new defaultItem(), true);
     },
-    editCuenta: function editCuenta(cuenta) {
-      this.currentCuenta = cuenta;
-      this.isModalActive = true;
+    editItem: function editItem(item) {
+      this.configForm(item, true);
     },
-    saveCuenta: function saveCuenta(cuenta) {
+    saveItem: function saveItem(item) {
       var _this = this;
 
-      if (cuenta.id == -1) {
-        _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__["default"].create(this.$route.params.id, cuenta).then(function (response) {
-          _this.clearForm(false);
+      console.log(defaultItem);
+
+      if (item.id == -1) {
+        _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_1__["default"].create(this.$route.params.id, item).then(function (response) {
+          _this.fillTable();
+
+          _this.configForm(new defaultItem(), false);
 
           _this.$buefy.toast.open("Guardado completado");
         })["catch"](function (error) {
           console.log(error);
         });
       } else {
-        _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__["default"].update(cuenta.id, cuenta).then(function (response) {
-          _this.clearForm(false);
+        _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_1__["default"].update(item.id, item).then(function (response) {
+          _this.fillTable();
+
+          _this.configForm(new defaultItem(), false);
 
           _this.$buefy.toast.open("Guardado completado");
         })["catch"](function (error) {
@@ -214,19 +180,19 @@ var defaultData = {
         });
       }
     },
-    deleteCuenta: function deleteCuenta(cuenta) {
+    deleteItem: function deleteItem(item) {
       var _this2 = this;
 
       this.$buefy.dialog.confirm({
         title: "Borrar concepto",
-        message: "\xBFEstas seguro que desea borrar <b> ".concat(cuenta.nombre, "</b>? Esta acci\xF3n no se puede revertir."),
+        message: "\xBFEstas seguro que desea borrar <b> ".concat(item.nombre, "</b>? Esta acci\xF3n no se puede revertir."),
         confirmText: "Borrar",
         cancelText: "Cancelar",
         type: "is-danger",
         hasIcon: true,
         onConfirm: function onConfirm() {
-          _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__["default"]["delete"](cuenta.id).then(function (response) {
-            _this2.fillCuentasTable();
+          _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"](item.id).then(function (response) {
+            _this2.fillTable();
 
             _this2.$buefy.toast.open("Borrado completado");
           })["catch"](function (error) {
@@ -235,32 +201,31 @@ var defaultData = {
         }
       });
     },
-    fillCuentasTable: function fillCuentasTable() {
+    fillTable: function fillTable() {
       var _this3 = this;
 
-      _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_2__["default"].getAll(this.$route.params.id).then(function (response) {
-        _this3.cuentas = response.data.data;
+      _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_1__["default"].getAll(this.$route.params.id).then(function (response) {
+        _this3.items = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     refresh: function refresh() {
-      this.fillCuentasTable();
-      this.setTipoCuenta();
-      this.clearForm(false);
+      this.fillTable();
+      this.setGroup();
+      this.configForm(new defaultItem(), false);
     },
-    setTipoCuenta: function setTipoCuenta() {
+    setGroup: function setGroup() {
       var _this4 = this;
 
-      _services_TiposCuentaDataService__WEBPACK_IMPORTED_MODULE_1__["default"].get(this.$route.params.id).then(function (response) {
-        _this4.tipoCuenta = response.data.data;
+      _services_TiposCuentaDataService__WEBPACK_IMPORTED_MODULE_0__["default"].get(this.$route.params.id).then(function (response) {
+        _this4.group = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    clearForm: function clearForm(isModalActive) {
-      this.fillCuentasTable();
-      this.currentCuenta = defaultData;
+    configForm: function configForm(item, isModalActive) {
+      this.currentItem = item;
       this.isModalActive = isModalActive;
     }
   },
@@ -273,94 +238,6 @@ var defaultData = {
     }
   }
 });
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cuentas/CuentaForm.vue?vue&type=template&id=fd45038a&":
-/*!*********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/cuentas/CuentaForm.vue?vue&type=template&id=fd45038a& ***!
-  \*********************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "form",
-    {
-      on: {
-        submit: function($event) {
-          $event.preventDefault()
-          return _vm.$emit("save", _vm.cuenta)
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "modal-card" }, [
-        _c("header", { staticClass: "modal-card-head" }, [
-          _c("p", { staticClass: "modal-card-title" }, [
-            _vm._v("Nuevo concepto de " + _vm._s(_vm.title))
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "section",
-          { staticClass: "modal-card-body" },
-          [
-            _c(
-              "b-field",
-              { attrs: { label: "Nombre" } },
-              [
-                _c("b-input", {
-                  attrs: { type: "text", placeholder: "Nombre", required: "" },
-                  model: {
-                    value: _vm.cuenta.nombre,
-                    callback: function($$v) {
-                      _vm.$set(_vm.cuenta, "nombre", $$v)
-                    },
-                    expression: "cuenta.nombre"
-                  }
-                })
-              ],
-              1
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("footer", { staticClass: "modal-card-foot" }, [
-          _c(
-            "button",
-            {
-              staticClass: "button",
-              attrs: { type: "button" },
-              on: {
-                click: function($event) {
-                  return _vm.$parent.close()
-                }
-              }
-            },
-            [_vm._v("Cancelar")]
-          ),
-          _vm._v(" "),
-          _c("button", { staticClass: "button is-primary" }, [
-            _vm._v("Guardar")
-          ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
 
 /***/ }),
 
@@ -384,9 +261,7 @@ var render = function() {
     [
       _c("h2", { staticClass: "subtitle" }, [_vm._v("Catalogos")]),
       _vm._v(" "),
-      _c("h1", { staticClass: "title" }, [
-        _vm._v(_vm._s(_vm.tipoCuenta.nombre))
-      ]),
+      _c("h1", { staticClass: "title" }, [_vm._v(_vm._s(_vm.group.nombre))]),
       _vm._v(" "),
       _c(
         "b-modal",
@@ -407,11 +282,8 @@ var render = function() {
         },
         [
           _c("cuenta-form", {
-            attrs: {
-              title: _vm.nombreTipoCuenta,
-              "init-cuenta": _vm.currentCuenta
-            },
-            on: { save: _vm.saveCuenta }
+            attrs: { title: _vm.title, "init-cuenta": _vm.currentItem },
+            on: { save: _vm.saveItem }
           })
         ],
         1
@@ -427,7 +299,7 @@ var render = function() {
               {
                 staticClass: "is-primary",
                 attrs: { "icon-left": "plus" },
-                on: { click: _vm.newCuenta }
+                on: { click: _vm.newItem }
               },
               [_vm._v("Agregar")]
             )
@@ -488,17 +360,17 @@ var render = function() {
         "b-table",
         {
           attrs: {
-            data: _vm.cuentas,
+            data: _vm.items,
             striped: true,
             hoverable: true,
-            selected: _vm.currentCuenta,
+            selected: _vm.currentItem,
             paginated: _vm.isPaginated,
             "per-page": _vm.perPage,
             "pagination-position": _vm.paginationPosition
           },
           on: {
             "update:selected": function($event) {
-              _vm.currentCuenta = $event
+              _vm.currentItem = $event
             }
           },
           scopedSlots: _vm._u([
@@ -565,7 +437,7 @@ var render = function() {
                         staticClass: "button is-primary",
                         on: {
                           click: function($event) {
-                            return _vm.editCuenta(props.row)
+                            return _vm.editItem(props.row)
                           }
                         }
                       },
@@ -578,7 +450,7 @@ var render = function() {
                         staticClass: "button is-danger",
                         on: {
                           click: function($event) {
-                            return _vm.deleteCuenta(props.row)
+                            return _vm.deleteItem(props.row)
                           }
                         }
                       },
@@ -624,75 +496,6 @@ var render = function() {
 }
 var staticRenderFns = []
 render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/cuentas/CuentaForm.vue":
-/*!********************************************************!*\
-  !*** ./resources/js/components/cuentas/CuentaForm.vue ***!
-  \********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _CuentaForm_vue_vue_type_template_id_fd45038a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CuentaForm.vue?vue&type=template&id=fd45038a& */ "./resources/js/components/cuentas/CuentaForm.vue?vue&type=template&id=fd45038a&");
-/* harmony import */ var _CuentaForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CuentaForm.vue?vue&type=script&lang=js& */ "./resources/js/components/cuentas/CuentaForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _CuentaForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _CuentaForm_vue_vue_type_template_id_fd45038a___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _CuentaForm_vue_vue_type_template_id_fd45038a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/cuentas/CuentaForm.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/cuentas/CuentaForm.vue?vue&type=script&lang=js&":
-/*!*********************************************************************************!*\
-  !*** ./resources/js/components/cuentas/CuentaForm.vue?vue&type=script&lang=js& ***!
-  \*********************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CuentaForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CuentaForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cuentas/CuentaForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CuentaForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/cuentas/CuentaForm.vue?vue&type=template&id=fd45038a&":
-/*!***************************************************************************************!*\
-  !*** ./resources/js/components/cuentas/CuentaForm.vue?vue&type=template&id=fd45038a& ***!
-  \***************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CuentaForm_vue_vue_type_template_id_fd45038a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CuentaForm.vue?vue&type=template&id=fd45038a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cuentas/CuentaForm.vue?vue&type=template&id=fd45038a&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CuentaForm_vue_vue_type_template_id_fd45038a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CuentaForm_vue_vue_type_template_id_fd45038a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

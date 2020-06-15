@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2 class="subtitle">Catalogos</h2>
-        <h1 class="title">{{ tipoCuenta.nombre }}</h1>
+        <h1 class="title">{{ group.nombre }}</h1>
 
         <b-modal
             :active.sync="isModalActive"
@@ -11,12 +11,12 @@
             aria-role="dialog"
             aria-modal
         >
-            <cuenta-form :title="nombreTipoCuenta" :init-cuenta="currentCuenta" @save="saveCuenta"></cuenta-form>
+            <cuenta-form :title="title" :init-cuenta="currentItem" @save="saveItem"></cuenta-form>
         </b-modal>
 
         <b-field grouped group-multiline>
             <div class="control">
-                <b-button icon-left="plus" class="is-primary" @click="newCuenta">Agregar</b-button>
+                <b-button icon-left="plus" class="is-primary" @click="newItem">Agregar</b-button>
             </div>
             <div class="control">
                 <b-select v-model="perPage" :disabled="!isPaginated">
@@ -33,10 +33,10 @@
         </b-field>
 
         <b-table
-            :data="cuentas"
+            :data="items"
             :striped="true"
             :hoverable="true"
-            :selected.sync="currentCuenta"
+            :selected.sync="currentItem"
             :paginated="isPaginated"
             :per-page="perPage"
             :pagination-position="paginationPosition"
@@ -67,10 +67,10 @@
                     sortable
                 >{{ props.row.updated_at }}</b-table-column>
                 <b-table-column>
-                    <button class="button is-primary" @click="editCuenta(props.row)">
+                    <button class="button is-primary" @click="editItem(props.row)">
                         <i class="fas fa-pen"></i>
                     </button>
-                    <button class="button is-danger" @click="deleteCuenta(props.row)">
+                    <button class="button is-danger" @click="deleteItem(props.row)">
                         <i class="fas fa-times"></i>
                     </button>
                 </b-table-column>
@@ -90,23 +90,29 @@
 </template>
 
 <script>
-import CuentaForm from "./CuentaForm";
-import TiposCuentaDataService from "../../services/TiposCuentaDataService";
-import CuentaDataService from "../../services/CuentaDataService";
+import GroupDataService from "../../services/TiposCuentaDataService";
+import ItemDataService from "../../services/CuentaDataService";
 
-const defaultData = {
-    id: -1,
-    nombre: ""
-};
+function defaultItem() {
+    return {
+        id: -1,
+        nombre: ""
+    };
+}
+
+function defaultGroup() {
+    return {
+        id: -1,
+        nombre: ""
+    };
+}
 
 export default {
     data() {
         return {
-            cuentas: [],
-            tipoCuenta: {
-                nombre: ""
-            },
-            currentCuenta: defaultData,
+            items: [],
+            group: new defaultGroup(),
+            currentItem: null,
             isModalActive: false,
             isPaginated: true,
             isSearchable: false,
@@ -117,39 +123,41 @@ export default {
     },
     computed: {
         isEmpty() {
-            return this.cuentas.length == 0;
+            return this.items.length == 0;
         },
-        nombreTipoCuenta() {
-            return this.tipoCuenta.nombre.toLowerCase().slice(0, -1);
+        title() {
+            return this.group.nombre.toLowerCase().slice(0, -1);
         }
     },
     components: {
-        CuentaForm
+        CuentaForm: () => import("./CuentaForm")
     },
     methods: {
-        newCuenta() {
-            this.clearForm(true);
+        newItem() {
+            this.configForm(new defaultItem(), true);
         },
 
-        editCuenta(cuenta) {
-            this.currentCuenta = cuenta;
-            this.isModalActive = true;
+        editItem(item) {
+            this.configForm(item, true);
         },
 
-        saveCuenta(cuenta) {
-            if (cuenta.id == -1) {
-                CuentaDataService.create(this.$route.params.id, cuenta)
+        saveItem(item) {
+            console.log(defaultItem);
+            if (item.id == -1) {
+                ItemDataService.create(this.$route.params.id, item)
                     .then(response => {
-                        this.clearForm(false);
+                        this.fillTable();
+                        this.configForm(new defaultItem(), false);
                         this.$buefy.toast.open("Guardado completado");
                     })
                     .catch(error => {
                         console.log(error);
                     });
             } else {
-                CuentaDataService.update(cuenta.id, cuenta)
+                ItemDataService.update(item.id, item)
                     .then(response => {
-                        this.clearForm(false);
+                        this.fillTable();
+                        this.configForm(new defaultItem(), false);
                         this.$buefy.toast.open("Guardado completado");
                     })
                     .catch(error => {
@@ -158,18 +166,18 @@ export default {
             }
         },
 
-        deleteCuenta(cuenta) {
+        deleteItem(item) {
             this.$buefy.dialog.confirm({
                 title: "Borrar concepto",
-                message: `¿Estas seguro que desea borrar <b> ${cuenta.nombre}</b>? Esta acción no se puede revertir.`,
+                message: `¿Estas seguro que desea borrar <b> ${item.nombre}</b>? Esta acción no se puede revertir.`,
                 confirmText: "Borrar",
                 cancelText: "Cancelar",
                 type: "is-danger",
                 hasIcon: true,
                 onConfirm: () => {
-                    CuentaDataService.delete(cuenta.id)
+                    ItemDataService.delete(item.id)
                         .then(response => {
-                            this.fillCuentasTable();
+                            this.fillTable();
                             this.$buefy.toast.open("Borrado completado");
                         })
                         .catch(error => {
@@ -179,10 +187,10 @@ export default {
             });
         },
 
-        fillCuentasTable() {
-            CuentaDataService.getAll(this.$route.params.id)
+        fillTable() {
+            ItemDataService.getAll(this.$route.params.id)
                 .then(response => {
-                    this.cuentas = response.data.data;
+                    this.items = response.data.data;
                 })
                 .catch(error => {
                     console.log(error);
@@ -190,23 +198,23 @@ export default {
         },
 
         refresh() {
-            this.fillCuentasTable();
-            this.setTipoCuenta();
-            this.clearForm(false);
+            this.fillTable();
+            this.setGroup();
+            this.configForm(new defaultItem(), false);
         },
 
-        setTipoCuenta() {
-            TiposCuentaDataService.get(this.$route.params.id)
+        setGroup() {
+            GroupDataService.get(this.$route.params.id)
                 .then(response => {
-                    this.tipoCuenta = response.data.data;
+                    this.group = response.data.data;
                 })
                 .catch(error => {
                     console.log(error);
                 });
         },
-        clearForm(isModalActive) {
-            this.fillCuentasTable();
-            this.currentCuenta = defaultData;
+
+        configForm(item, isModalActive) {
+            this.currentItem = item;
             this.isModalActive = isModalActive;
         }
     },

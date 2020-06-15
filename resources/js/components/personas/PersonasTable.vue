@@ -1,22 +1,22 @@
 <template>
     <div>
         <h2 class="subtitle">Catalogos</h2>
-        <h1 class="title">{{ categoria.nombre }}</h1>
+        <h1 class="title">{{ group.nombre }}</h1>
 
         <b-modal
             :active.sync="isModalActive"
             has-modal-card
             trap-focus
-            :destroy-on-hide="false"
+            :destroy-on-hide="true"
             aria-role="dialog"
             aria-modal
         >
-            <persona-form id="persona-form" @save="addPersona" :categoria="nombreCategoria"></persona-form>
+            <persona-form :group="nombreGroup" :init-persona="currentItem" @save="saveItem"></persona-form>
         </b-modal>
 
         <b-field grouped group-multiline>
             <div class="control">
-                <b-button icon-left="plus" class="is-primary" @click="isModalActive = true">Agregar</b-button>
+                <b-button icon-left="plus" class="is-primary" @click="newItem">Agregar</b-button>
             </div>
             <div class="control">
                 <b-select v-model="perPage" :disabled="!isPaginated">
@@ -33,11 +33,11 @@
         </b-field>
 
         <b-table
-            :data="personas"
+            :data="items"
             :striped="true"
             :narrowed="true"
             :hoverable="true"
-            :selected.sync="currentPersona"
+            :selected.sync="currentItem"
             :paginated="isPaginated"
             :per-page="perPage"
             :pagination-position="paginationPosition"
@@ -74,23 +74,11 @@
                     label="Actualizado"
                     sortable
                 >{{ props.row.updated_at }}</b-table-column>
-                <!-- <b-table-column
-                    field="horario_entrada"
-                    label="Hora entrada"
-                    sortable
-                    v-if="categoria.nombre === 'Empleados'"
-                >{{ props.row.horario_entrada }}</b-table-column>
-                <b-table-column
-                    field="horario_salida"
-                    label="Hora salida"
-                    sortable
-                    v-if="categoria.nombre === 'Empleados'"
-                >{{ props.row.horario_salida }}</b-table-column>-->
                 <b-table-column>
-                    <button class="button is-primary" @click="editPersona(props.row)">
+                    <button class="button is-primary" @click="editItem(props.row)">
                         <i class="fas fa-pen"></i>
                     </button>
-                    <button class="button is-danger" @click="deletePersona(props.row)">
+                    <button class="button is-danger" @click="deleteItem(props.row)">
                         <i class="fas fa-times"></i>
                     </button>
                 </b-table-column>
@@ -111,20 +99,41 @@
 
 
 <script>
-import PersonaForm from "./PersonaForm";
-import PersonaDataService from "../../services/PersonaDataService";
-import CategoriaDataService from "../../services/CategoriaDataService";
-import axios from "axios";
+import ItemDataService from "../../services/PersonaDataService";
+import GroupDataService from "../../services/CategoriaDataService";
+
+function defaultItem() {
+    return {
+        id: -1,
+        nombre: "",
+        apellidos: "",
+        telefono: "",
+        direccion: "",
+        rfc: "",
+        hora_entrada: "",
+        hora_salida: "",
+        nacimiento: "",
+        pago_fijo: "",
+        es_nadador_indie: "",
+        puesto: "",
+        categoria_id: ""
+        // created_user_id: "",
+        // updated_user_id: ""
+    };
+}
+
+function defaultGroup() {
+    return {
+        nombre: "Beneficiario"
+    };
+}
 
 export default {
     data() {
         return {
-            personas: [],
-            currentPersona: null,
-            currentIndex: -1,
-            categoria: {
-                nombre: ""
-            },
+            items: [],
+            group: new defaultGroup(),
+            currentItem: null,
             isModalActive: false,
             isPaginated: true,
             isSearchable: false,
@@ -133,46 +142,63 @@ export default {
             paginationPosition: "bottom"
         };
     },
-    components: {
-        PersonaForm
-    },
     computed: {
         isEmpty() {
-            return this.personas.length == 0;
+            return this.items.length == 0;
         },
-        nombreCategoria() {
-            return this.categoria.nombre.toLowerCase().slice(0, -1);
+        nombreGroup() {
+            return this.group.nombre.toLowerCase().slice(0, -1);
         }
     },
+    components: {
+        PersonaForm: () =>import('./PersonaForm')
+    },
     methods: {
-        addPersona(persona) {
-            PersonaDataService.create(this.$route.params.id, persona)
-                .then(response => {
-                    this.isModalActive = false;
-                    this.fillPersonasTable();
-                    console.log(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+        newItem() {
+            this.configForm(new defaultItem(), true);
         },
 
-        editPersona(persona) {
-            this.isModalActive = true;
+        editItem(item) {
+            this.configForm(item, true);
         },
 
-        deletePersona(persona) {
+        saveItem(item) {
+            console.log(item);
+            if (item.id == -1) {
+                ItemDataService.create(this.$route.params.id, item)
+                    .then(response => {
+                        this.fillTable();
+                        this.configForm(new defaultItem(), false);
+                        this.$buefy.toast.open("Guardado completado");
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                ItemDataService.update(item.id, item)
+                    .then(response => {
+                        this.fillTable();
+                        this.configForm(new defaultItem(), false);
+                        this.$buefy.toast.open("Guardado completado");
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+        },
+
+        deleteItem(item) {
             this.$buefy.dialog.confirm({
-                title: `Borrar ${this.categoria.nombre}`,
-                message: `¿Estas seguro que desea borrar <b> ${persona.nombre}</b>? Esta acción no se puede revertir.`,
+                title: `Borrar ${this.group.nombre}`,
+                message: `¿Estas seguro que desea borrar <b> ${item.nombre}</b>? Esta acción no se puede revertir.`,
                 confirmText: "Borrar",
                 cancelText: "Cancelar",
                 type: "is-danger",
                 hasIcon: true,
                 onConfirm: () => {
-                    PersonaDataService.delete(persona.id)
+                    ItemDataService.delete(item.id)
                         .then(response => {
-                            this.fillPersonasTable();
+                            this.fillTable();
                             this.$buefy.toast.open("Borrado completado");
                         })
                         .catch(error => {
@@ -182,32 +208,36 @@ export default {
             });
         },
 
-        fillPersonasTable() {
-            PersonaDataService.getAll(this.$route.params.id)
+        fillTable() {
+            ItemDataService.getAll(this.$route.params.id)
                 .then(response => {
-                    this.personas = response.data.data;
+                    this.items = response.data.data;
                 })
                 .catch(error => {
                     console.log(error);
                 });
         },
+
         refresh() {
-            this.fillPersonasTable();
-            this.setActivePersona(null, -1);
-            this.setCategoria(this.$route.params.id);
+            this.fillTable();
+            this.setGroup();
+            this.configForm(new defaultItem(), false);
         },
-        setActivePersona(persona, index) {
-            this.currentIndex = index;
-            this.currentPersona = persona;
-        },
-        setCategoria(id) {
-            CategoriaDataService.get(id)
+
+        setGroup() {
+            GroupDataService.get(this.$route.params.id)
                 .then(response => {
-                    this.categoria = response.data.data;
+                    this.group = response.data.data;
                 })
                 .catch(error => {
+                    this.group = defaultGroup;
                     console.log(error);
                 });
+        },
+
+        configForm(item, isModalActive) {
+            this.currentItem = item;
+            this.isModalActive = isModalActive;
         }
     },
     created() {

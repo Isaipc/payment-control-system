@@ -29,7 +29,6 @@
                         name="telefono"
                         v-model="persona.telefono"
                         placeholder="Telefono"
-                        required
                     ></b-input>
                 </b-field>
                 <b-field label="Direccion">
@@ -38,7 +37,6 @@
                         name="direccion"
                         v-model="persona.direccion"
                         placeholder="Dirección"
-                        required
                     ></b-input>
                 </b-field>
                 <!-- < label="Puesto" select
@@ -62,29 +60,17 @@
 </template>
 
 <script>
-import Modal from "../Modal";
-
 export default {
     data() {
         return {
-            persona: {
-                nombre: "",
-                apellidos: "",
-                telefono: "",
-                direccion: "",
-                rfc: "",
-                hora_entrada: "",
-                hora_salida: "",
-                nacimiento: "",
-                pago_fijo: "",
-                es_nadador_indie: "",
-                puesto: "",
-                // created_user_id: "",
-                // updated_user_id: ""
-            }
+            persona: this.initPersona
         };
     },
     props: {
+        initPersona: {
+            type: Object,
+            required: true
+        },
         categoria: {
             type: String,
             default: "Beneficiario"
