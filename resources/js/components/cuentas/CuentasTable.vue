@@ -49,7 +49,9 @@
                     numeric
                     width="100"
                     :searchable="isSearchable"
-                >{{ props.row.id }}</b-table-column>
+                >
+                    <span class="has-text-weight-bold">{{ props.row.id }}</span>
+                </b-table-column>
                 <b-table-column
                     field="nombre"
                     label="Nombre"
@@ -60,19 +62,15 @@
                     field="created_at"
                     label="Creado"
                     sortable
-                >{{ props.row.created_at }}</b-table-column>
+                >{{ new Date(props.row.created_at).toLocaleDateString() }}</b-table-column>
                 <b-table-column
                     field="updated_at"
                     label="Actualizado"
                     sortable
-                >{{ props.row.updated_at }}</b-table-column>
+                >{{ new Date(props.row.updated_at).toLocaleDateString() }}</b-table-column>
                 <b-table-column>
-                    <button class="button is-primary" @click="editItem(props.row)">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="button is-danger" @click="deleteItem(props.row)">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <b-button type="is-success" icon-left="pen" @click="editItem(props.row)"></b-button>
+                    <b-button type="is-danger" icon-left="times" @click="deleteItem(props.row)"></b-button>
                 </b-table-column>
             </template>
             <template slot="empty">
