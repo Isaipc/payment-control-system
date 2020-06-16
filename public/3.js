@@ -109,6 +109,55 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -149,7 +198,8 @@ function defaultGroup() {
       isSearchable: false,
       perPageList: [5, 10, 15, 20],
       perPage: 5,
-      paginationPosition: "bottom"
+      paginationPosition: "bottom",
+      nullValue: "Sin valor"
     };
   },
   computed: {
@@ -387,7 +437,9 @@ var render = function() {
             selected: _vm.currentItem,
             paginated: _vm.isPaginated,
             "per-page": _vm.perPage,
-            "pagination-position": _vm.paginationPosition
+            "pagination-position": _vm.paginationPosition,
+            detailed: "",
+            "detail-key": "id"
           },
           on: {
             "update:selected": function($event) {
@@ -407,7 +459,7 @@ var render = function() {
                         label: "Id",
                         sortable: "",
                         numeric: "",
-                        width: "100",
+                        width: "80",
                         searchable: _vm.isSearchable
                       }
                     },
@@ -515,6 +567,114 @@ var render = function() {
                     ],
                     1
                   )
+                ]
+              }
+            },
+            {
+              key: "detail",
+              fn: function(props) {
+                return [
+                  _c("p", { staticClass: "subtitle is-uppercase" }, [
+                    _c("strong", [
+                      _vm._v(
+                        _vm._s(props.row.nombre) +
+                          " " +
+                          _vm._s(props.row.apellidos)
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "subtitle" }, [
+                    _vm._v("Datos personales")
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "columns" }, [
+                    _c("div", { staticClass: "column" }, [
+                      _c("p", [
+                        _c("strong", [_vm._v("Telefono:")]),
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(props.row.telefono) +
+                            "\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _c("strong", [_vm._v("Dirección:")]),
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(
+                              props.row.direccion
+                                ? props.row.direccion
+                                : _vm.nullValue
+                            ) +
+                            "\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _c("strong", [_vm._v("Fecha de nacimiento:")]),
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(
+                              props.row.nacimiento
+                                ? props.row.nacimiento
+                                : _vm.nullValue
+                            ) +
+                            "\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _c("strong", [_vm._v("Edad:")]),
+                        _vm._v(
+                          "\n                        [edad]\n                    "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "column" }, [
+                      _c("p", [
+                        _c("strong", [_vm._v("Horario:")]),
+                        _vm._v(" "),
+                        props.row.hora_entrada && props.row.hora_salida
+                          ? _c("span", [
+                              _vm._v(
+                                _vm._s(props.row.hora_entrada) +
+                                  " - " +
+                                  _vm._s(props.row.hora_salida)
+                              )
+                            ])
+                          : _c("span", [_vm._v(_vm._s(_vm.nullValue))])
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _c("strong", [_vm._v("Pago fijo:")]),
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(
+                              props.row.pago_fijo
+                                ? props.row.pago_fijo
+                                : _vm.nullValue
+                            ) +
+                            "\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _c("strong", [_vm._v("Puesto:")]),
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(
+                              props.row.puesto
+                                ? props.row.puesto
+                                : _vm.nullValue
+                            ) +
+                            "\n                    "
+                        )
+                      ])
+                    ])
+                  ])
                 ]
               }
             }

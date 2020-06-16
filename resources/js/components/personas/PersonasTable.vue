@@ -41,6 +41,8 @@
             :paginated="isPaginated"
             :per-page="perPage"
             :pagination-position="paginationPosition"
+            detailed
+            detail-key="id"
         >
             <template slot-scope="props">
                 <b-table-column
@@ -48,7 +50,7 @@
                     label="Id"
                     sortable
                     numeric
-                    width="100"
+                    width="80"
                     :searchable="isSearchable"
                 >
                     <span class="has-text-weight-bold">{{ props.row.id }}</span>
@@ -90,6 +92,53 @@
                         <p>No hay registros</p>
                     </div>
                 </section>
+            </template>
+            <template slot="detail" slot-scope="props">
+                <p class="subtitle is-uppercase">
+                    <strong>{{ props.row.nombre }} {{ props.row.apellidos}}</strong>
+                </p>
+                <p class="subtitle">Datos personales</p>
+                <div class="columns">
+                    <div class="column">
+                        <p>
+                            <strong>Telefono:</strong>
+                            {{ props.row.telefono }}
+                        </p>
+                        <p>
+                            <strong>Dirección:</strong>
+                            {{ props.row.direccion ? props.row.direccion : nullValue }}
+                        </p>
+                        <p>
+                            <strong>Fecha de nacimiento:</strong>
+                            {{ props.row.nacimiento ? props.row.nacimiento : nullValue }}
+                        </p>
+                        <p>
+                            <strong>Edad:</strong>
+                            [edad]
+                        </p>
+                    </div>
+                    <div class="column">
+                        <p>
+                            <strong>Horario:</strong>
+                            <span
+                                v-if="props.row.hora_entrada && props.row.hora_salida"
+                            >{{ props.row.hora_entrada }} - {{ props.row.hora_salida }}</span>
+                            <span v-else>{{ nullValue }}</span>
+                        </p>
+                        <p>
+                            <strong>Pago fijo:</strong>
+                            {{ props.row.pago_fijo ? props.row.pago_fijo : nullValue }}
+                        </p>
+                        <p>
+                            <strong>Puesto:</strong>
+                            {{ props.row.puesto ? props.row.puesto : nullValue }}
+                        </p>
+                        <!-- <p>
+                    <strong>es_nadador_indie:</strong>
+                    {{ props.row.es_nadador_indie }}
+                        </p>-->
+                    </div>
+                </div>
             </template>
         </b-table>
     </div>
@@ -137,7 +186,8 @@ export default {
             isSearchable: false,
             perPageList: [5, 10, 15, 20],
             perPage: 5,
-            paginationPosition: "bottom"
+            paginationPosition: "bottom",
+            nullValue: "Sin valor"
         };
     },
     computed: {
