@@ -158,6 +158,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -169,9 +171,9 @@ function defaultItem() {
     telefono: "",
     direccion: "",
     rfc: "",
-    hora_entrada: "",
-    hora_salida: "",
-    nacimiento: "",
+    hora_entrada: null,
+    hora_salida: null,
+    nacimiento: null,
     pago_fijo: "",
     es_nadador_indie: "",
     puesto: "",
@@ -199,7 +201,8 @@ function defaultGroup() {
       perPageList: [5, 10, 15, 20],
       perPage: 5,
       paginationPosition: "bottom",
-      nullValue: "Sin valor"
+      nullValue: "Sin valor" // time: moment().format("Y-M-d H:mm:ss")
+
     };
   },
   computed: {
@@ -212,7 +215,7 @@ function defaultGroup() {
   },
   components: {
     PersonaForm: function PersonaForm() {
-      return __webpack_require__.e(/*! import() */ 9).then(__webpack_require__.bind(null, /*! ./PersonaForm */ "./resources/js/components/personas/PersonaForm.vue"));
+      return __webpack_require__.e(/*! import() */ 8).then(__webpack_require__.bind(null, /*! ./PersonaForm */ "./resources/js/components/personas/PersonaForm.vue"));
     }
   },
   methods: {
@@ -220,12 +223,15 @@ function defaultGroup() {
       this.configForm(new defaultItem(), true);
     },
     editItem: function editItem(item) {
-      this.configForm(item, true);
+      this.configForm(Object.assign({}, item), true);
     },
     saveItem: function saveItem(item) {
       var _this = this;
 
-      console.log(item);
+      this.currentItem = item;
+      console.log(this.currentItem);
+      this.formatCurrentItem();
+      console.log(this.currentItem);
 
       if (item.id == -1) {
         _services_PersonaDataService__WEBPACK_IMPORTED_MODULE_0__["default"].create(this.$route.params.id, item).then(function (response) {
@@ -290,13 +296,18 @@ function defaultGroup() {
       _services_CategoriaDataService__WEBPACK_IMPORTED_MODULE_1__["default"].get(this.$route.params.id).then(function (response) {
         _this4.group = response.data.data;
       })["catch"](function (error) {
-        _this4.group = defaultGroup;
+        _this4.group = new defaultGroup();
         console.log(error);
       });
     },
     configForm: function configForm(item, isModalActive) {
       this.currentItem = item;
       this.isModalActive = isModalActive;
+    },
+    formatCurrentItem: function formatCurrentItem() {
+      this.currentItem.nombre = this.currentItem.nombre.toUpperCase();
+      this.currentItem.apellidos = this.currentItem.apellidos.toUpperCase();
+      this.currentItem.direccion = this.currentItem.direccion.toUpperCase();
     }
   },
   created: function created() {
@@ -352,7 +363,10 @@ var render = function() {
         },
         [
           _c("persona-form", {
-            attrs: { group: _vm.nombreGroup, "init-persona": _vm.currentItem },
+            attrs: {
+              categoria: _vm.nombreGroup,
+              "init-persona": _vm.currentItem
+            },
             on: { save: _vm.saveItem }
           })
         ],
@@ -625,12 +639,19 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _c("p", [
-                        _c("strong", [_vm._v("Edad:")]),
-                        _vm._v(
-                          "\n                        [edad]\n                    "
-                        )
-                      ])
+                      _c("strong", [_vm._v("Edad:")]),
+                      _vm._v(" "),
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(
+                            _vm._f("moment")(
+                              new Date(props.row.nacimiento),
+                              "from",
+                              "now"
+                            )
+                          ) +
+                          "\n                    "
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "column" }, [

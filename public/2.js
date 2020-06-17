@@ -141,7 +141,7 @@ function defaultGroup() {
   },
   components: {
     CuentaForm: function CuentaForm() {
-      return __webpack_require__.e(/*! import() */ 8).then(__webpack_require__.bind(null, /*! ./CuentaForm */ "./resources/js/components/cuentas/CuentaForm.vue"));
+      return __webpack_require__.e(/*! import() */ 7).then(__webpack_require__.bind(null, /*! ./CuentaForm */ "./resources/js/components/cuentas/CuentaForm.vue"));
     }
   },
   methods: {
@@ -149,12 +149,10 @@ function defaultGroup() {
       this.configForm(new defaultItem(), true);
     },
     editItem: function editItem(item) {
-      this.configForm(item, true);
+      this.configForm(Object.assign({}, item), true);
     },
     saveItem: function saveItem(item) {
       var _this = this;
-
-      console.log(defaultItem);
 
       if (item.id == -1) {
         _services_CuentaDataService__WEBPACK_IMPORTED_MODULE_1__["default"].create(this.$route.params.id, item).then(function (response) {

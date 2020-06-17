@@ -72,7 +72,7 @@ import Navbar from "./Navbar";
 export default {
     data() {
         return {
-            loggedIn: false
+            loggedIn: false,
         };
     },
     components: {

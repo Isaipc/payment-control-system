@@ -11,7 +11,7 @@
             aria-role="dialog"
             aria-modal
         >
-            <persona-form :group="nombreGroup" :init-persona="currentItem" @save="saveItem"></persona-form>
+            <persona-form :categoria="nombreGroup" :init-persona="currentItem" @save="saveItem"></persona-form>
         </b-modal>
 
         <b-field grouped group-multiline>
@@ -112,10 +112,12 @@
                             <strong>Fecha de nacimiento:</strong>
                             {{ props.row.nacimiento ? props.row.nacimiento : nullValue }}
                         </p>
-                        <p>
-                            <strong>Edad:</strong>
-                            [edad]
-                        </p>
+                        <!-- <p v-if="props.row.nacimiento"> -->
+                        <strong>Edad:</strong>
+                        <!-- {{ moment().diff(props.row.nacimiento, 'years') }} -->
+                        <!-- {{ new Date() | diff(props.row.nacimiento, 'years') }} -->
+                        {{ new Date(props.row.nacimiento) | moment('from', 'now') }}
+                        <!-- </p> -->
                     </div>
                     <div class="column">
                         <p>
@@ -157,9 +159,9 @@ function defaultItem() {
         telefono: "",
         direccion: "",
         rfc: "",
-        hora_entrada: "",
-        hora_salida: "",
-        nacimiento: "",
+        hora_entrada: null,
+        hora_salida: null,
+        nacimiento: null,
         pago_fijo: "",
         es_nadador_indie: "",
         puesto: "",
@@ -188,6 +190,7 @@ export default {
             perPage: 5,
             paginationPosition: "bottom",
             nullValue: "Sin valor"
+            // time: moment().format("Y-M-d H:mm:ss")
         };
     },
     computed: {
@@ -207,11 +210,16 @@ export default {
         },
 
         editItem(item) {
-            this.configForm(item, true);
+            this.configForm(Object.assign({}, item), true);
         },
 
         saveItem(item) {
-            console.log(item);
+
+            this.currentItem = item;
+            console.log(this.currentItem);
+            this.formatCurrentItem();
+            console.log(this.currentItem);
+
             if (item.id == -1) {
                 ItemDataService.create(this.$route.params.id, item)
                     .then(response => {
@@ -278,7 +286,7 @@ export default {
                     this.group = response.data.data;
                 })
                 .catch(error => {
-                    this.group = defaultGroup;
+                    this.group = new defaultGroup();
                     console.log(error);
                 });
         },
@@ -286,6 +294,12 @@ export default {
         configForm(item, isModalActive) {
             this.currentItem = item;
             this.isModalActive = isModalActive;
+        },
+
+        formatCurrentItem(){
+            this.currentItem.nombre = this.currentItem.nombre.toUpperCase();
+            this.currentItem.apellidos = this.currentItem.apellidos.toUpperCase();
+            this.currentItem.direccion = this.currentItem.direccion.toUpperCase();
         }
     },
     created() {

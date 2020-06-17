@@ -136,11 +136,10 @@ export default {
         },
 
         editItem(item) {
-            this.configForm(item, true);
+            this.configForm(Object.assign({}, item), true);
         },
 
         saveItem(item) {
-            console.log(defaultItem);
             if (item.id == -1) {
                 ItemDataService.create(this.$route.params.id, item)
                     .then(response => {
